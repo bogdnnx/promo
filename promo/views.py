@@ -14,7 +14,7 @@ def category_list(request):
     city_id = request.GET.get('city', '')
     
     # Пагинация для категорий
-    paginator = Paginator(categories, 3)  # 8 категорий на страницу
+    paginator = Paginator(categories, 8)  # 8 категорий на страницу
     page = request.GET.get('page')
     try:
         page_obj = paginator.page(page)
@@ -26,6 +26,24 @@ def category_list(request):
     return render(request, 'promo/category_list.html', {
         'categories': page_obj
     })
+
+
+def all_offers(request):
+    offers = Offer.objects.all().order_by('-id')
+    paginator = Paginator(offers, 6)
+    page = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    return render(request, 'promo/offer_list.html', {
+        'offers': page_obj,
+        'category': None,  # чтобы шаблон не ждал category
+        'cities': City.objects.all()
+    })
+
 
 def offer_list(request, category_id):
     city_id = request.GET.get('city')
@@ -40,7 +58,7 @@ def offer_list(request, category_id):
     cities = City.objects.all()
     
     # Пагинация для акций
-    paginator = Paginator(offers, 6)  # 6 акций на страницу
+    paginator = Paginator(offers, 10)  # 6 акций на страницу
     page = request.GET.get('page')
     try:
         page_obj = paginator.page(page)
@@ -77,7 +95,7 @@ def search(request):
             pass
     
     # Пагинация для результатов поиска
-    paginator = Paginator(offers, 6)  # 6 результатов на страницу
+    paginator = Paginator(offers, 10)  # 6 результатов на страницу
     page = request.GET.get('page')
     try:
         page_obj = paginator.page(page)

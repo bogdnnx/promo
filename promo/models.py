@@ -7,9 +7,15 @@ class City(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ["id"]
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     icon = models.ImageField(upload_to='category_icons/', null=True, blank=True)
+
+    class Meta:
+        ordering = ["id"]
 
     def __str__(self):
         return self.name
@@ -17,7 +23,10 @@ class Category(models.Model):
 class Partner(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    logo = models.ImageField(upload_to='partner_logos/', null=True, blank=True)
+    #logo = models.ImageField(upload_to='partner_logos/', null=True, blank=True)
+
+    class Meta:
+        ordering = ["id"]
 
     def __str__(self):
         return self.name
@@ -36,3 +45,6 @@ class Offer(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ["id"]

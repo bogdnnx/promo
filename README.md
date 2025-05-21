@@ -25,7 +25,7 @@
 
 - Python 3.11+
 - Django 5.2.1
-- PostgreSQL (или SQLite для тестов)
+- PostgreSQL
 - Bootstrap 5 (CDN)
 - Pillow (для работы с изображениями)
 

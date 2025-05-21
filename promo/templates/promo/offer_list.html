@@ -1,15 +1,15 @@
 {% extends 'promo/base.html' %}
 {% block content %}
-<a href="{% url 'category_list' %}" class="btn btn-secondary mb-3">← На главную</a>
+<a href="{% url 'category_list' %}{% if selected_city %}?city={{ selected_city }}{% endif %}" class="btn btn-secondary mb-3">← На главную</a>
 <h1>{{ category.name }}</h1>
-<form method="get" class="mb-3">
-    <select name="city" onchange="this.form.submit()">
-        <option value="">Все города</option>
-        {% for city in cities %}
-        <option value="{{ city.id }}" {% if city.id|stringformat:"s" == selected_city %}selected{% endif %}>{{ city.name }}</option>
-        {% endfor %}
-    </select>
-</form>
+<!--<form method="get" class="mb-3">-->
+<!--    <select name="city" onchange="this.form.submit()">-->
+<!--        <option value="">Все города</option>-->
+<!--        {% for city in cities %}-->
+<!--        <option value="{{ city.id }}" {% if city.id|stringformat:"s" == selected_city %}selected{% endif %}>{{ city.name }}</option>-->
+<!--        {% endfor %}-->
+<!--    </select>-->
+<!--</form>-->
 <div class="row">
     {% for offer in offers %}
     <div class="col-12 col-md-6 mb-4">

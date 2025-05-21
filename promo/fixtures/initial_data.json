@@ -1,0 +1,752 @@
+[
+    {
+        "model": "promo.city",
+        "pk": 1,
+        "fields": {
+            "name": "Уфа"
+        }
+    },
+    {
+        "model": "promo.city",
+        "pk": 2,
+        "fields": {
+            "name": "Стерлитамак"
+        }
+    },
+    {
+        "model": "promo.city",
+        "pk": 3,
+        "fields": {
+            "name": "Салават"
+        }
+    },
+    {
+        "model": "promo.city",
+        "pk": 4,
+        "fields": {
+            "name": "Нефтекамск"
+        }
+    },
+    {
+        "model": "promo.city",
+        "pk": 5,
+        "fields": {
+            "name": "Октябрьский"
+        }
+    },
+    {
+        "model": "promo.category",
+        "pk": 1,
+        "fields": {
+            "name": "Рестораны и кафе"
+        }
+    },
+    {
+        "model": "promo.category",
+        "pk": 2,
+        "fields": {
+            "name": "Развлечения"
+        }
+    },
+    {
+        "model": "promo.category",
+        "pk": 3,
+        "fields": {
+            "name": "Спорт и фитнес"
+        }
+    },
+    {
+        "model": "promo.category",
+        "pk": 4,
+        "fields": {
+            "name": "Красота и здоровье"
+        }
+    },
+    {
+        "model": "promo.category",
+        "pk": 5,
+        "fields": {
+            "name": "Обучение"
+        }
+    },
+    {
+        "model": "promo.partner",
+        "pk": 1,
+        "fields": {
+            "name": "Ресторан 'Урал'",
+            "description": "Ресторан башкирской кухни в центре города"
+        }
+    },
+    {
+        "model": "promo.partner",
+        "pk": 2,
+        "fields": {
+            "name": "Кинотеатр 'Родина'",
+            "description": "Современный кинотеатр с 5 залами"
+        }
+    },
+    {
+        "model": "promo.partner",
+        "pk": 3,
+        "fields": {
+            "name": "Фитнес-клуб 'Атлет'",
+            "description": "Современный фитнес-клуб с бассейном"
+        }
+    },
+    {
+        "model": "promo.partner",
+        "pk": 4,
+        "fields": {
+            "name": "Салон красоты 'Элегант'",
+            "description": "Салон красоты премиум-класса"
+        }
+    },
+    {
+        "model": "promo.partner",
+        "pk": 5,
+        "fields": {
+            "name": "Языковая школа 'Лингва'",
+            "description": "Школа иностранных языков"
+        }
+    },
+    {
+        "model": "promo.partner",
+        "pk": 6,
+        "fields": {
+            "name": "Кафе 'Солнышко'",
+            "description": "Уютное кафе с домашней кухней"
+        }
+    },
+    {
+        "model": "promo.partner",
+        "pk": 7,
+        "fields": {
+            "name": "Боулинг-клуб 'Страйк'",
+            "description": "Современный боулинг-клуб"
+        }
+    },
+    {
+        "model": "promo.partner",
+        "pk": 8,
+        "fields": {
+            "name": "Йога-студия 'Гармония'",
+            "description": "Студия йоги и медитации"
+        }
+    },
+    {
+        "model": "promo.partner",
+        "pk": 9,
+        "fields": {
+            "name": "Спа-центр 'Релакс'",
+            "description": "Спа-центр с широким спектром услуг"
+        }
+    },
+    {
+        "model": "promo.partner",
+        "pk": 10,
+        "fields": {
+            "name": "Школа программирования 'Код'",
+            "description": "Школа программирования для детей и взрослых"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 1,
+        "fields": {
+            "title": "Скидка 20% на бизнес-ланч",
+            "description": "Скидка 20% на бизнес-ланч с 12:00 до 16:00 в будние дни",
+            "discount": "20%",
+            "promo_code": "LANCH20",
+            "category": 1,
+            "partner": 1,
+            "city": 1,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 2,
+        "fields": {
+            "title": "2 билета по цене 1",
+            "description": "При покупке билета на любой сеанс второй билет бесплатно",
+            "discount": "50%",
+            "promo_code": "2X1",
+            "category": 2,
+            "partner": 2,
+            "city": 1,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 3,
+        "fields": {
+            "title": "Месяц фитнеса за полцены",
+            "description": "Скидка 50% на первый месяц абонемента",
+            "discount": "50%",
+            "promo_code": "FIT50",
+            "category": 3,
+            "partner": 3,
+            "city": 2,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 4,
+        "fields": {
+            "title": "Стрижка + окрашивание",
+            "description": "При заказе стрижки окрашивание в подарок",
+            "discount": "100%",
+            "promo_code": "STYLE100",
+            "category": 4,
+            "partner": 4,
+            "city": 3,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-15"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 5,
+        "fields": {
+            "title": "Пробный урок английского бесплатно",
+            "description": "Первый урок английского языка бесплатно",
+            "discount": "100%",
+            "promo_code": "ENGLISH",
+            "category": 5,
+            "partner": 5,
+            "city": 4,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 6,
+        "fields": {
+            "title": "Завтрак за 199 рублей",
+            "description": "Специальное меню завтраков каждый день до 11:00",
+            "discount": "40%",
+            "promo_code": "BREAKFAST",
+            "category": 1,
+            "partner": 6,
+            "city": 5,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 7,
+        "fields": {
+            "title": "Час боулинга за 500 рублей",
+            "description": "Специальная цена на час игры в будние дни",
+            "discount": "30%",
+            "promo_code": "BOWL30",
+            "category": 2,
+            "partner": 7,
+            "city": 1,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 8,
+        "fields": {
+            "title": "Пробное занятие йогой",
+            "description": "Первое занятие йогой бесплатно",
+            "discount": "100%",
+            "promo_code": "YOGA",
+            "category": 3,
+            "partner": 8,
+            "city": 2,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 9,
+        "fields": {
+            "title": "Спа-программа 'Антистресс'",
+            "description": "Скидка 25% на спа-программу 'Антистресс'",
+            "discount": "25%",
+            "promo_code": "SPA25",
+            "category": 4,
+            "partner": 9,
+            "city": 3,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 10,
+        "fields": {
+            "title": "Курс Python для начинающих",
+            "description": "Скидка 20% на базовый курс Python",
+            "discount": "20%",
+            "promo_code": "PYTHON20",
+            "category": 5,
+            "partner": 10,
+            "city": 4,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 11,
+        "fields": {
+            "title": "Ужин для двоих",
+            "description": "Скидка 30% на ужин для двоих по пятницам",
+            "discount": "30%",
+            "promo_code": "DINNER30",
+            "category": 1,
+            "partner": 1,
+            "city": 5,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 12,
+        "fields": {
+            "title": "Детский билет в подарок",
+            "description": "При покупке взрослого билета детский билет бесплатно",
+            "discount": "100%",
+            "promo_code": "KIDS",
+            "category": 2,
+            "partner": 2,
+            "city": 1,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 13,
+        "fields": {
+            "title": "Персональный тренер",
+            "description": "Скидка 40% на 5 занятий с персональным тренером",
+            "discount": "40%",
+            "promo_code": "TRAINER40",
+            "category": 3,
+            "partner": 3,
+            "city": 2,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 14,
+        "fields": {
+            "title": "Маникюр + педикюр",
+            "description": "При заказе маникюра педикюр со скидкой 50%",
+            "discount": "50%",
+            "promo_code": "NAIL50",
+            "category": 4,
+            "partner": 4,
+            "city": 3,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-15"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 15,
+        "fields": {
+            "title": "Курс веб-разработки",
+            "description": "Скидка 25% на курс веб-разработки",
+            "discount": "25%",
+            "promo_code": "WEB25",
+            "category": 5,
+            "partner": 10,
+            "city": 4,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 16,
+        "fields": {
+            "title": "Бизнес-ланч в кафе",
+            "description": "Скидка 15% на бизнес-ланч в будние дни",
+            "discount": "15%",
+            "promo_code": "CAFE15",
+            "category": 1,
+            "partner": 6,
+            "city": 5,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 17,
+        "fields": {
+            "title": "Вечеринка в боулинге",
+            "description": "Скидка 35% на аренду дорожки в выходные",
+            "discount": "35%",
+            "promo_code": "BOWL35",
+            "category": 2,
+            "partner": 7,
+            "city": 1,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 18,
+        "fields": {
+            "title": "Групповые занятия йогой",
+            "description": "Скидка 20% на абонемент на 8 занятий",
+            "discount": "20%",
+            "promo_code": "YOGA20",
+            "category": 3,
+            "partner": 8,
+            "city": 2,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 19,
+        "fields": {
+            "title": "Массаж + спа",
+            "description": "При заказе массажа спа-процедура со скидкой 40%",
+            "discount": "40%",
+            "promo_code": "SPA40",
+            "category": 4,
+            "partner": 9,
+            "city": 3,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-15"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 20,
+        "fields": {
+            "title": "Курс мобильной разработки",
+            "description": "Скидка 30% на курс разработки мобильных приложений",
+            "discount": "30%",
+            "promo_code": "MOBILE30",
+            "category": 5,
+            "partner": 10,
+            "city": 4,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 21,
+        "fields": {
+            "title": "Ужин с вином",
+            "description": "Бутылка вина в подарок при заказе ужина от 3000 рублей",
+            "discount": "100%",
+            "promo_code": "WINE",
+            "category": 1,
+            "partner": 1,
+            "city": 5,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 22,
+        "fields": {
+            "title": "Киномарафон",
+            "description": "Скидка 25% на билеты на все сеансы в выходные",
+            "discount": "25%",
+            "promo_code": "MOVIE25",
+            "category": 2,
+            "partner": 2,
+            "city": 1,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 23,
+        "fields": {
+            "title": "Фитнес-тестирование",
+            "description": "Бесплатное фитнес-тестирование при покупке абонемента",
+            "discount": "100%",
+            "promo_code": "TEST",
+            "category": 3,
+            "partner": 3,
+            "city": 2,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 24,
+        "fields": {
+            "title": "Стрижка + укладка",
+            "description": "При заказе стрижки укладка бесплатно",
+            "discount": "100%",
+            "promo_code": "HAIR",
+            "category": 4,
+            "partner": 4,
+            "city": 3,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-15"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 25,
+        "fields": {
+            "title": "Курс дизайна",
+            "description": "Скидка 35% на курс графического дизайна",
+            "discount": "35%",
+            "promo_code": "DESIGN35",
+            "category": 5,
+            "partner": 10,
+            "city": 4,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 26,
+        "fields": {
+            "title": "Завтрак в выходные",
+            "description": "Скидка 20% на завтраки по выходным",
+            "discount": "20%",
+            "promo_code": "WEEKEND",
+            "category": 1,
+            "partner": 6,
+            "city": 5,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 27,
+        "fields": {
+            "title": "Детский боулинг",
+            "description": "Скидка 40% на детские дорожки в будние дни",
+            "discount": "40%",
+            "promo_code": "KIDS40",
+            "category": 2,
+            "partner": 7,
+            "city": 1,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 28,
+        "fields": {
+            "title": "Медитация",
+            "description": "Бесплатное занятие медитацией при покупке абонемента",
+            "discount": "100%",
+            "promo_code": "MEDITATE",
+            "category": 3,
+            "partner": 8,
+            "city": 2,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 29,
+        "fields": {
+            "title": "Спа-день",
+            "description": "Скидка 30% на полный день спа-процедур",
+            "discount": "30%",
+            "promo_code": "SPADAY",
+            "category": 4,
+            "partner": 9,
+            "city": 3,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-15"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 30,
+        "fields": {
+            "title": "Курс по базам данных",
+            "description": "Скидка 25% на курс по SQL и базам данных",
+            "discount": "25%",
+            "promo_code": "SQL25",
+            "category": 5,
+            "partner": 10,
+            "city": 4,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 31,
+        "fields": {
+            "title": "Семейный ужин в ресторане",
+            "description": "Скидка 25% на семейный ужин от 4 человек",
+            "discount": "25%",
+            "promo_code": "FAMILY25",
+            "category": 1,
+            "partner": 1,
+            "city": 2,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 32,
+        "fields": {
+            "title": "Квест-комната",
+            "description": "Скидка 30% на любую квест-комнату в будние дни",
+            "discount": "30%",
+            "promo_code": "QUEST30",
+            "category": 2,
+            "partner": 2,
+            "city": 3,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 33,
+        "fields": {
+            "title": "Тренажерный зал",
+            "description": "Скидка 35% на абонемент в тренажерный зал",
+            "discount": "35%",
+            "promo_code": "GYM35",
+            "category": 3,
+            "partner": 3,
+            "city": 4,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 34,
+        "fields": {
+            "title": "Стрижка для мужчин",
+            "description": "Скидка 20% на мужскую стрижку в будние дни",
+            "discount": "20%",
+            "promo_code": "MENS20",
+            "category": 4,
+            "partner": 4,
+            "city": 5,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 35,
+        "fields": {
+            "title": "Курс китайского языка",
+            "description": "Скидка 40% на курс китайского языка",
+            "discount": "40%",
+            "promo_code": "CHINESE40",
+            "category": 5,
+            "partner": 5,
+            "city": 1,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 36,
+        "fields": {
+            "title": "Бранч в выходные",
+            "description": "Скидка 25% на бранч по выходным",
+            "discount": "25%",
+            "promo_code": "BRUNCH25",
+            "category": 1,
+            "partner": 6,
+            "city": 3,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 37,
+        "fields": {
+            "title": "Лазертаг",
+            "description": "Скидка 30% на игру в лазертаг для групп от 6 человек",
+            "discount": "30%",
+            "promo_code": "LASER30",
+            "category": 2,
+            "partner": 7,
+            "city": 4,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 38,
+        "fields": {
+            "title": "Пилатес",
+            "description": "Скидка 25% на абонемент на занятия пилатесом",
+            "discount": "25%",
+            "promo_code": "PILATES25",
+            "category": 3,
+            "partner": 8,
+            "city": 5,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 39,
+        "fields": {
+            "title": "Уход за лицом",
+            "description": "Скидка 35% на процедуры по уходу за лицом",
+            "discount": "35%",
+            "promo_code": "FACE35",
+            "category": 4,
+            "partner": 9,
+            "city": 1,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-04-30"
+        }
+    },
+    {
+        "model": "promo.offer",
+        "pk": 40,
+        "fields": {
+            "title": "Курс по маркетингу",
+            "description": "Скидка 30% на курс по интернет-маркетингу",
+            "discount": "30%",
+            "promo_code": "MARKET30",
+            "category": 5,
+            "partner": 10,
+            "city": 2,
+            "valid_from": "2024-03-01",
+            "valid_to": "2024-03-31"
+        }
+    }
+] 

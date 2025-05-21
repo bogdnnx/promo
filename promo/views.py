@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 from django.shortcuts import render
@@ -11,17 +12,49 @@ from django.db.models import Q
 def category_list(request):
     categories = Category.objects.all()
     city_id = request.GET.get('city', '')
-    return render(request, 'promo/category_list.html', {'categories': categories, 'selected_city': city_id})
+    
+    # Пагинация для категорий
+    paginator = Paginator(categories, 3)  # 8 категорий на страницу
+    page = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    
+    return render(request, 'promo/category_list.html', {
+        'categories': page_obj,
+        'selected_city': city_id
+    })
 
 def offer_list(request, category_id):
     city_id = request.GET.get('city')
     offers = Offer.objects.filter(category_id=category_id)
-    if city_id:
-        offers = offers.filter(city_id=city_id)
+    if city_id and city_id != 'None':
+        try:
+            city_id = int(city_id)
+            offers = offers.filter(city_id=city_id)
+        except (ValueError, TypeError):
+            pass
     category = get_object_or_404(Category, id=category_id)
     cities = City.objects.all()
+    
+    # Пагинация для акций
+    paginator = Paginator(offers, 6)  # 6 акций на страницу
+    page = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    
     return render(request, 'promo/offer_list.html', {
-        'offers': offers, 'category': category, 'cities': cities, 'selected_city': city_id
+        'offers': page_obj,
+        'category': category,
+        'cities': cities,
+        'selected_city': city_id
     })
 
 def offer_detail(request, offer_id):
@@ -36,11 +69,30 @@ def search(request):
     offers = Offer.objects.all()
     if query:
         offers = offers.filter(
-            Q(title__icontains=query) | Q(description__icontains=query) | Q(partner__name__icontains=query)
+            Q(title__icontains=query) | Q(description__icontains=query) | Q(partner__name__icontains=query) | Q()
         )
-    if city_id:
-        offers = offers.filter(city_id=city_id)
-    return render(request, 'promo/search_results.html', {'offers': offers, 'query': query})
+    if city_id and city_id != 'None':
+        try:
+            city_id = int(city_id)
+            offers = offers.filter(city_id=city_id)
+        except (ValueError, TypeError):
+            pass
+    
+    # Пагинация для результатов поиска
+    paginator = Paginator(offers, 6)  # 6 результатов на страницу
+    page = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    
+    return render(request, 'promo/search_results.html', {
+        'offers': page_obj,
+        'query': query,
+        'selected_city': city_id
+    })
 
 # def promotion_list(request, category_id):
 #     promotions = Promotion.objects.filter(category_id=category_id, is_active=True)

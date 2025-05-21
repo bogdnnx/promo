@@ -1,32 +1,56 @@
 {% extends 'promo/base.html' %}
-{% block content %}
-<a href="{% url 'category_list' %}{% if selected_city %}?city={{ selected_city }}{% endif %}" class="btn btn-secondary mb-3">← На главную</a>
-<h1>{{ category.name }}</h1>
-<!--<form method="get" class="mb-3">-->
-<!--    <select name="city" onchange="this.form.submit()">-->
-<!--        <option value="">Все города</option>-->
-<!--        {% for city in cities %}-->
-<!--        <option value="{{ city.id }}" {% if city.id|stringformat:"s" == selected_city %}selected{% endif %}>{{ city.name }}</option>-->
-<!--        {% endfor %}-->
-<!--    </select>-->
-<!--</form>-->
-<div class="row">
-    {% for offer in offers %}
-    <div class="col-12 col-md-6 mb-4">
-        <a href="{% url 'offer_detail' offer.id %}{% if selected_city %}?city={{ selected_city }}{% endif %}" class="text-decoration-none">
 
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Акции в категории "{{ category.name }}"</h1>
+        <a href="{% url 'category_list' %}?city={{ selected_city }}" class="btn btn-outline-primary">← Назад к категориям</a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col">
+<!--            <form method="get" class="form-inline">-->
+<!--                <select name="city" class="form-control mr-2" onchange="this.form.submit()">-->
+<!--                    <option value="">Все города</option>-->
+<!--                    {% for city in cities %}-->
+<!--                    <option value="{{ city.id }}" {% if selected_city == city.id|stringformat:"i" %}selected{% endif %}>-->
+<!--                        {{ city.name }}-->
+<!--                    </option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+<!--            </form>-->
+        </div>
+    </div>
+
+    <div class="row">
+        {% for offer in offers %}
+        <div class="col-md-4 mb-4">
             <div class="card h-100">
                 {% if offer.image %}
-                <img src="{{ offer.image.url }}" class="card-img-top offer-img" alt="{{ offer.title }}">
+                <img src="{{ offer.image.url }}" class="card-img-top" alt="{{ offer.title }}">
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ offer.title }}</h5>
-                    <p class="card-text">{{ offer.discount }}</p>
-                    <p class="card-text"><small class="text-muted">{{ offer.partner.name }}</small></p>
+                    <p class="card-text">{{ offer.description|truncatewords:30 }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Партнер: {{ offer.partner.name }}<br>
+                            Город: {{ offer.city.name }}
+                        </small>
+                    </p>
+                    <a href="{% url 'offer_detail' offer.id %}?city={{ selected_city }}" class="btn btn-primary">Подробнее</a>
                 </div>
             </div>
-        </a>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                В данной категории пока нет акций.
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+
+    {% include 'promo/pagination.html' with page_obj=offers %}
 </div>
 {% endblock %}

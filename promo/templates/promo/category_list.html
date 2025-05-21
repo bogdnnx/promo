@@ -1,47 +1,25 @@
 {% extends 'promo/base.html' %}
-{% block content %}
-<h1>Категории</h1>
-<div class="row justify-content-start">
-    {% for category in categories %}
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex align-items-stretch">
-           <a href="{% url 'offer_list' category.id %}{% if selected_city %}?city={{ selected_city }}{% endif %}" class="text-decoration-none w-100">
 
-            <div class="card h-100 text-center shadow-sm category-card">
-                <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                    {% if category.icon %}
-                        <img src="{{ category.icon.url }}" class="mb-3 category-icon" alt="{{ category.name }}">
-                    {% else %}
-                        <div class="mb-3 category-icon-placeholder"></div>
-                    {% endif %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Категории акций</h1>
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                {% if category.icon %}
+                <img src="{{ category.icon.url }}" class="card-img-top" alt="{{ category.name }}">
+                {% endif %}
+                <div class="card-body">
                     <h5 class="card-title">{{ category.name }}</h5>
+                    <p class="card-text">{{ category.description }}</p>
+                    <a href="{% url 'offer_list' category.id %}?city={{ selected_city }}" class="btn btn-primary">Смотреть акции</a>
                 </div>
             </div>
-        </a>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    
+    {% include 'promo/pagination.html' with page_obj=categories %}
 </div>
-<style>
-.category-card {
-    transition: box-shadow 0.2s;
-}
-.category-card:hover {
-    box-shadow: 0 0 20px #e0e0e0;
-}
-.category-icon {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
-    background: #f8f9fa;
-    border-radius: 50%;
-    border: 1px solid #eee;
-    padding: 8px;
-}
-.category-icon-placeholder {
-    width: 64px;
-    height: 64px;
-    background: #f0f0f0;
-    border-radius: 50%;
-    border: 1px solid #eee;
-}
-</style>
 {% endblock %}

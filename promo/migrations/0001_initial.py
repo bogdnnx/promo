@@ -5,7 +5,9 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
+    """
+    Начальная миграция: создаёт таблицы для основных моделей приложения.
+    """
     initial = True
 
     dependencies = [

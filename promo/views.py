@@ -1,15 +1,16 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-# Create your views here.
+# Представления для работы с акциями, категориями и поиском
 from django.shortcuts import render
 from .models import Category, Offer, City
 from django.db.models import Q
 
 
-
-
 def category_list(request):
+    """
+    Отображает список всех категорий с пагинацией.
+    """
     categories = Category.objects.all()
     city_id = request.GET.get('city', '')
     
@@ -29,6 +30,9 @@ def category_list(request):
 
 
 def all_offers(request):
+    """
+    Отображает все акции без фильтрации по городу или категории, с пагинацией.
+    """
     offers = Offer.objects.all().order_by('-id')
     paginator = Paginator(offers, 6)
     page = request.GET.get('page')
@@ -46,6 +50,9 @@ def all_offers(request):
 
 
 def offer_list(request, category_id):
+    """
+    Отображает список акций по выбранной категории и (опционально) городу, с пагинацией.
+    """
     city_id = request.GET.get('city')
     offers = Offer.objects.filter(category_id=category_id)
     if city_id and city_id != 'None':
@@ -74,12 +81,18 @@ def offer_list(request, category_id):
     })
 
 def offer_detail(request, offer_id):
+    """
+    Отображает детальную страницу акции по её id.
+    """
     offer = get_object_or_404(Offer, id=offer_id)
     city_id = request.GET.get('city', '')
     return render(request, 'promo/offer_detail.html', {'offer': offer})
 
 
 def search(request):
+    """
+    Осуществляет поиск акций по названию, описанию и названию партнёра, с учётом выбранного города и пагинацией.
+    """
     query = request.GET.get('q', '')
     city_id = request.GET.get('city')
     offers = Offer.objects.all()

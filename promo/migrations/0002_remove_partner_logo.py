@@ -4,7 +4,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
+    """
+    Миграция для удаления поля logo из модели Partner.
+    """
     dependencies = [
         ('promo', '0001_initial'),
     ]

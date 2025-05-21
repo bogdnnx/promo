@@ -1,0 +1,19 @@
+{% extends 'promo/base.html' %}
+{% block content %}
+<div class="card mb-4">
+    {% if offer.image %}
+    <img src="{{ offer.image.url }}" class="card-img-top" alt="{{ offer.title }}">
+    {% endif %}
+    <div class="card-body">
+        <h2 class="card-title">{{ offer.title }}</h2>
+        <p class="card-text">{{ offer.description }}</p>
+        <p><strong>Скидка:</strong> {{ offer.discount }}</p>
+        {% if offer.promo_code %}
+        <p><strong>Промокод:</strong> <code>{{ offer.promo_code }}</code></p>
+        {% endif %}
+        <p><strong>Партнёр:</strong> {{ offer.partner.name }}</p>
+        <p><strong>Город:</strong> {{ offer.city.name }}</p>
+        <p><strong>Срок действия:</strong> {{ offer.valid_from }} — {{ offer.valid_to }}</p>
+    </div>
+</div>
+<a href="{% url 'offer_list' offer.category.id %}{% if selected_city %}?city={{ selected_city }}{% endif %}" class="btn btn-secondary">Назад к списку</a>{% endblock %}

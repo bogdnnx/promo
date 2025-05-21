@@ -1,0 +1,27 @@
+{% extends 'promo/base.html' %}
+{% block content %}
+<h1>Результаты поиска: "{{ query }}"</h1>
+{% if offers %}
+<div class="row">
+    {% for offer in offers %}
+    <div class="col-12 col-md-6 mb-4">
+        <a href="{% url 'offer_detail' offer.id %}" class="text-decoration-none">
+            <div class="card h-100">
+                {% if offer.image %}
+                <img src="{{ offer.image.url }}" class="card-img-top offer-img" alt="{{ offer.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ offer.title }}</h5>
+                    <p class="card-text">{{ offer.discount }}</p>
+                    <p class="card-text"><small class="text-muted">{{ offer.partner.name }}</small></p>
+                    <p class="card-text">{{ offer.description|truncatewords:20 }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>Ничего не найдено.</p>
+{% endif %}
+{% endblock %}

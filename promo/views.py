@@ -24,8 +24,7 @@ def category_list(request):
         page_obj = paginator.page(paginator.num_pages)
     
     return render(request, 'promo/category_list.html', {
-        'categories': page_obj,
-        'selected_city': city_id
+        'categories': page_obj
     })
 
 def offer_list(request, category_id):
@@ -53,14 +52,13 @@ def offer_list(request, category_id):
     return render(request, 'promo/offer_list.html', {
         'offers': page_obj,
         'category': category,
-        'cities': cities,
-        'selected_city': city_id
+        'cities': cities
     })
 
 def offer_detail(request, offer_id):
     offer = get_object_or_404(Offer, id=offer_id)
     city_id = request.GET.get('city', '')
-    return render(request, 'promo/offer_detail.html', {'offer': offer, 'selected_city': city_id})
+    return render(request, 'promo/offer_detail.html', {'offer': offer})
 
 
 def search(request):
@@ -90,8 +88,7 @@ def search(request):
     
     return render(request, 'promo/search_results.html', {
         'offers': page_obj,
-        'query': query,
-        'selected_city': city_id
+        'query': query
     })
 
 # def promotion_list(request, category_id):

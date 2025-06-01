@@ -1,10 +1,16 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # Представления для работы с акциями, категориями и поиском
 from django.shortcuts import render
-from .models import Category, Offer, City
+from .models import Category, Offer, City, Partner
 from django.db.models import Q
+from .serializers import (
+    CitySerializer, CategorySerializer,
+    PartnerSerializer, OfferSerializer
+)
 
 
 def category_list(request):
@@ -129,3 +135,36 @@ def search(request):
 # def promotion_detail(request, promotion_id):
 #     promotion = Promotion.objects.get(id=promotion_id)
 #     return render(request, 'promo/detail.html', {'promotion': promotion})
+
+# API Views
+class CityViewSet(viewsets.ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+class PartnerViewSet(viewsets.ModelViewSet):
+    queryset = Partner.objects.all()
+    serializer_class = PartnerSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+class OfferViewSet(viewsets.ModelViewSet):
+    queryset = Offer.objects.all()
+    serializer_class = OfferSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        queryset = Offer.objects.all()
+        city = self.request.query_params.get('city', None)
+        category = self.request.query_params.get('category', None)
+        
+        if city:
+            queryset = queryset.filter(city__name=city)
+        if category:
+            queryset = queryset.filter(category__name=category)
+            
+        return queryset

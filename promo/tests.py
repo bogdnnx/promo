@@ -318,7 +318,7 @@ class PromoViewsTest(BaseTestData): # Наследуемся от BaseTestData �
         """
         Тест представления all_offers (список всех акций).
         """
-        url = reverse('all_offers') # Используем имя маршрута из urls.py
+        url = reverse('all_offers')  # Используем имя маршрута из urls.py
         response = self.client.get(url)
 
         # 1. Проверяем статус код
@@ -328,15 +328,16 @@ class PromoViewsTest(BaseTestData): # Наследуемся от BaseTestData �
         self.assertTemplateUsed(response, 'promo/offer_list.html')
 
         # 3. Проверяем контекст шаблона
-        self.assertIn('offers', response.context) # Проверяем, что список акций в контексте
-        self.assertIn('cities', response.context) # Проверяем, что список городов в контексте
+        self.assertIn('offers', response.context)  # Проверяем, что список акций в контексте
+        self.assertIn('cities', response.context)  # Проверяем, что список городов в контексте
+        self.assertIn('page_obj', response.context)  # Проверяем наличие объекта пагинации
 
         # Проверяем, что объекты пагинатора корректны
-        self.assertTrue(hasattr(response.context['offers'], 'paginator'))
+        self.assertTrue(hasattr(response.context['page_obj'], 'paginator'))
         # Проверяем общее количество объектов до пагинации
-        self.assertEqual(response.context['offers'].paginator.count, 3)
+        self.assertEqual(response.context['page_obj'].paginator.count, 3)
         # Проверяем количество объектов на текущей странице (первой)
-        self.assertEqual(len(response.context['offers']), 3) # <-- Исправлено
+        self.assertEqual(len(response.context['page_obj']), 3)
 
 
         # Проверяем, что акции присутствуют на странице (по содержимому HTML)

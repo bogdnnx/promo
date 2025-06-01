@@ -1,9 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from rest_framework import viewsets
+from .serializers import CitySerializer, CategorySerializer, PartnerSerializer, OfferSerializer
+
 # Представления для работы с акциями, категориями и поиском
 from django.shortcuts import render
-from .models import Category, Offer, City
+from .models import Category, Offer, City, Partner
 from django.db.models import Q
 
 
@@ -122,10 +125,20 @@ def search(request):
         'query': query
     })
 
-# def promotion_list(request, category_id):
-#     promotions = Promotion.objects.filter(category_id=category_id, is_active=True)
-#     return render(request, 'promo/promotions.html', {'promotions': promotions})
-#
-# def promotion_detail(request, promotion_id):
-#     promotion = Promotion.objects.get(id=promotion_id)
-#     return render(request, 'promo/detail.html', {'promotion': promotion})
+
+
+class CityViewSet(viewsets.ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class PartnerViewSet(viewsets.ModelViewSet):
+    queryset = Partner.objects.all()
+    serializer_class = PartnerSerializer
+
+class OfferViewSet(viewsets.ModelViewSet):
+    queryset = Offer.objects.all()
+    serializer_class = OfferSerializer

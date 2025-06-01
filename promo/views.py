@@ -1,6 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from rest_framework import viewsets, filters
+from django_filters import rest_framework as django_filters
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.utils import timezone
+from .models import City, Category, Partner, Offer
 from rest_framework import viewsets
 from .serializers import CitySerializer, CategorySerializer, PartnerSerializer, OfferSerializer
 
@@ -127,18 +132,105 @@ def search(request):
 
 
 
+# views.py
+from rest_framework import viewsets, filters
+from django_filters import rest_framework as django_filters
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.utils import timezone
+from .models import City, Category, Partner, Offer
+from .serializers import (
+    CitySerializer, CategorySerializer,
+    PartnerSerializer, OfferSerializer
+)
+
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+
+    @action(detail=True, methods=['get'])
+    def offers(self, request, pk=None):
+        city = self.get_object()
+        offers = Offer.objects.filter(city=city)
+        serializer = OfferSerializer(offers, many=True)
+        return Response(serializer.data)
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+
+    @action(detail=True, methods=['get'])
+    def offers(self, request, pk=None):
+        category = self.get_object()
+        offers = Offer.objects.filter(category=category)
+        serializer = OfferSerializer(offers, many=True)
+        return Response(serializer.data)
 
 class PartnerViewSet(viewsets.ModelViewSet):
     queryset = Partner.objects.all()
     serializer_class = PartnerSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'description']
+
+    @action(detail=True, methods=['get'])
+    def active_offers(self, request, pk=None):
+        partner = self.get_object()
+        offers = Offer.objects.filter(
+            partner=partner,
+            valid_from__lte=timezone.now(),
+            valid_to__gte=timezone.now()
+        )
+        serializer = OfferSerializer(offers, many=True)
+        return Response(serializer.data)
+
+class OfferFilter(django_filters.FilterSet):
+    min_discount = django_filters.NumberFilter(field_name="discount", lookup_expr='gte')
+    max_discount = django_filters.NumberFilter(field_name="discount", lookup_expr='lte')
+    active = django_filters.BooleanFilter(method='filter_active')
+
+    class Meta:
+        model = Offer
+        fields = ['city', 'category', 'partner', 'min_discount', 'max_discount', 'active']
+
+    def filter_active(self, queryset, name, value):
+        if value:
+            return queryset.filter(
+                valid_from__lte=timezone.now(),
+                valid_to__gte=timezone.now()
+            )
+        return queryset
 
 class OfferViewSet(viewsets.ModelViewSet):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
+    filter_backends = [
+        django_filters.DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter
+    ]
+    filterset_class = OfferFilter
+    search_fields = ['title', 'description', 'promo_code']
+    ordering_fields = ['valid_from', 'valid_to', 'discount']
+    ordering = ['-valid_from']
+
+    @action(detail=False, methods=['get'])
+    def active(self, request):
+        offers = Offer.objects.filter(
+            valid_from__lte=timezone.now(),
+            valid_to__gte=timezone.now()
+        )
+        serializer = self.get_serializer(offers, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def expiring_soon(self, request):
+        offers = Offer.objects.filter(
+            valid_to__gte=timezone.now(),
+            valid_to__lte=timezone.now() + timezone.timedelta(days=7)
+        )
+        serializer = self.get_serializer(offers, many=True)
+        return Response(serializer.data)

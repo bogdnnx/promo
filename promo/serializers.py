@@ -3,73 +3,113 @@ from .models import City, Category, Partner, Offer
 from django.utils import timezone
 
 class CitySerializer(serializers.ModelSerializer):
-    offers_count = serializers.SerializerMethodField()
+    """
+    Сериализатор для модели City.
+    Используется в API для представления данных о городах.
+    """
 
     class Meta:
         model = City
-        fields = ['id', 'name', 'offers_count']
+        fields = ["id", "name"]
 
-    def get_offers_count(self, obj):
-        return obj.offer_set.count()
 
 class CategorySerializer(serializers.ModelSerializer):
-    offers_count = serializers.SerializerMethodField()
+    """
+    Сериализатор для модели Category.
+    Используется в API для представления данных о категориях акций.
+    """
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'icon', 'offers_count']
+        fields = ["id", "name"]
 
-    def get_offers_count(self, obj):
-        return obj.offer_set.count()
 
 class PartnerSerializer(serializers.ModelSerializer):
-    active_offers = serializers.SerializerMethodField()
+    """
+    Сериализатор для модели Partner.
+    Используется в API для представления данных о партнерах.
+    """
 
     class Meta:
         model = Partner
-        fields = ['id', 'name', 'description', 'active_offers']
-
-    def get_active_offers(self, obj):
-        return obj.offer_set.filter(
-            valid_from__lte=timezone.now(),
-            valid_to__gte=timezone.now()
-        ).count()
+        fields = ["id", "name", "description"]
 
 
 class OfferSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели Offer.
+    Включает вложенные сериализаторы для связанных моделей и
+    дополнительные поля для статуса активности и оставшегося времени.
+    """
+
+    city = CitySerializer(read_only=True)
     category = CategorySerializer(read_only=True)
     partner = PartnerSerializer(read_only=True)
-    city = CitySerializer(read_only=True)
+    city_id = serializers.PrimaryKeyRelatedField(
+        queryset=City.objects.all(),
+        source="city",
+        write_only=True
+    )
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+        source="category",
+        write_only=True
+    )
+    partner_id = serializers.PrimaryKeyRelatedField(
+        queryset=Partner.objects.all(),
+        source="partner",
+        write_only=True
+    )
     is_active = serializers.SerializerMethodField()
     days_left = serializers.SerializerMethodField()
-    category_id = serializers.IntegerField(write_only=True)
-    partner_id = serializers.IntegerField(write_only=True)
-    city_id = serializers.IntegerField(write_only=True)
-
 
     class Meta:
         model = Offer
         fields = [
-            'id', 'title', 'description', 'discount', 'promo_code',
-            'category', 'partner', 'city', 'valid_from', 'valid_to',
-            'image', 'is_active', 'days_left', 'category_id', 'partner_id', 'city_id'
+            "id",
+            "title",
+            "description",
+            "discount",
+            "promo_code",
+            "valid_from",
+            "valid_to",
+            "city",
+            "city_id",
+            "category",
+            "category_id",
+            "partner",
+            "partner_id",
+            "is_active",
+            "days_left",
+            "image"
         ]
-
+        read_only_fields = ["is_active", "days_left"]
 
     def get_is_active(self, obj):
-        now = timezone.now().date()  # Преобразуем datetime в date
+        """
+        Возвращает статус активности акции.
+        Акция считается активной, если текущая дата находится
+        в пределах срока её действия.
+        """
+        now = timezone.now().date()
         return obj.valid_from <= now <= obj.valid_to
 
-
     def get_days_left(self, obj):
+        """
+        Возвращает количество оставшихся дней действия акции.
+        Если срок действия истек, возвращает None.
+        """
         if obj.valid_to:
             return (obj.valid_to - timezone.now().date()).days
         return None
 
-
     def validate(self, data):
-        if data.get('valid_from') and data.get('valid_to'):
-            if data['valid_from'] > data['valid_to']:
+        """
+        Проверяет корректность дат начала и окончания акции.
+        Дата начала не может быть позже даты окончания.
+        """
+        if data.get("valid_from") and data.get("valid_to"):
+            if data["valid_from"] > data["valid_to"]:
                 raise serializers.ValidationError(
                     "Дата начала не может быть позже даты окончания"
                 )

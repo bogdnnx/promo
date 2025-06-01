@@ -10,10 +10,10 @@ router.register(r'partners', PartnerViewSet)
 router.register(r'offers', OfferViewSet)
 
 urlpatterns = [
-    path('', views.category_list, name='category_list'),
-    path('category/<int:category_id>/', views.offer_list, name='offer_list'),
-    path('offer/<int:offer_id>/', views.offer_detail, name='offer_detail'),
-    path('search/', views.search, name='search'),
-    path('offers/', views.all_offers, name='all_offers'),
+    path('', views.CategoryListView.as_view(), name='category_list'),
+    path('category/<int:category_id>/', views.OfferListListView.as_view(), name='offer_list'),
+    path('offer/<int:offer_id>/', views.OfferDetailView.as_view(), name='offer_detail'),
+    path('search/', views.SearchOffersListView.as_view(), name='search'),
+    path('offers/', views.AllOffersListView.as_view(), name='all_offers'),
     path('api/', include(router.urls))
 ]

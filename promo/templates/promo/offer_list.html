@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Акции в категории "{{ category.name }}"</h1>
+        <h1>Акции в категории {{ category.name }}</h1>
         <a href="{% url 'category_list' %}?city={{ selected_city }}" class="btn btn-outline-primary">← Назад к категориям</a>
     </div>
 

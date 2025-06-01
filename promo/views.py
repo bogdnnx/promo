@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.generic import ListView, DetailView
 from rest_framework import viewsets, filters
 from django_filters import rest_framework as django_filters
 from rest_framework.decorators import action
@@ -8,6 +9,17 @@ from django.utils import timezone
 from .models import City, Category, Partner, Offer
 from rest_framework import viewsets
 from .serializers import CitySerializer, CategorySerializer, PartnerSerializer, OfferSerializer
+
+from rest_framework import viewsets, filters
+from django_filters import rest_framework as django_filters
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.utils import timezone
+from .models import City, Category, Partner, Offer
+from .serializers import (
+    CitySerializer, CategorySerializer,
+    PartnerSerializer, OfferSerializer
+)
 
 # Представления для работы с акциями, категориями и поиском
 from django.shortcuts import render
@@ -36,6 +48,13 @@ def category_list(request):
         'categories': page_obj
     })
 
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'promo/category_list.html'
+    context_object_name = 'categories'
+    paginate_by = 8
+
+
 
 def all_offers(request):
     """
@@ -56,6 +75,25 @@ def all_offers(request):
         'cities': City.objects.all()
     })
 
+class AllOffersListView(ListView):
+    model = Offer
+    template_name = 'promo/offer_list.html'
+    context_object_name = 'offers'
+    #paginate_by = 6
+
+    def get_queryset(self):
+        # Переопределяем, чтобы добавить сортировку
+        return Offer.objects.all().order_by('title')
+
+    # def get_context_data(self, **kwargs):
+    #     # Переопределяем, чтобы добавить города в контекст (для фильтра в шаблоне)
+    #     context = super().get_context_data(**kwargs)
+    #     context['cities'] = City.objects.all()
+    #     # Возможно, нужно добавить selected_city, если форма фильтра в шаблоне общая
+    #     city_id = self.request.GET.get('city')
+    #     if city_id:
+    #         context['selected_city'] = city_id  # Здесь нужно подумать, как обрабатывать фильтр города
+    #     return context
 
 def offer_list(request, category_id):
     """
@@ -88,6 +126,37 @@ def offer_list(request, category_id):
         'cities': cities
     })
 
+
+class OfferListListView(ListView):
+    model = Offer
+    template_name = 'promo/offer_list.html'
+    context_object_name = 'offers'
+
+    def get_queryset(self):
+        category_id = self.kwargs['category_id']
+        queryset = Offer.objects.filter(category__id=category_id)
+        city_id = self.request.GET.get('city')
+        if city_id and city_id.isdigit():  # Проверяем, что city_id - число
+            queryset = queryset.filter(city_id=city_id)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Получаем объект категории для контекста
+        category_id = self.kwargs['category_id']
+        context['category'] = get_object_or_404(Category, id=category_id)
+        # Добавляем список всех городов для формы фильтра
+        context['cities'] = City.objects.all()
+        # Добавляем выбранный город, если есть
+        city_id = self.request.GET.get('city')
+        if city_id:
+            context['selected_city'] = city_id  # Здесь нужно подумать, как правильно передать в шаблон
+
+        return context
+
+
+
+
 def offer_detail(request, offer_id):
     """
     Отображает детальную страницу акции по её id.
@@ -95,6 +164,15 @@ def offer_detail(request, offer_id):
     offer = get_object_or_404(Offer, id=offer_id)
     city_id = request.GET.get('city', '')
     return render(request, 'promo/offer_detail.html', {'offer': offer})
+
+
+
+class OfferDetailView(DetailView):
+    model = Offer
+    template_name = 'promo/offer_detail.html'
+    context_object_name = 'offer'
+    pk_url_kwarg = 'offer_id'
+
 
 
 def search(request):
@@ -132,17 +210,58 @@ def search(request):
 
 
 
-# views.py
-from rest_framework import viewsets, filters
-from django_filters import rest_framework as django_filters
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from django.utils import timezone
-from .models import City, Category, Partner, Offer
-from .serializers import (
-    CitySerializer, CategorySerializer,
-    PartnerSerializer, OfferSerializer
-)
+class SearchOffersListView(ListView):
+    model = Offer
+    context_object_name = 'offers'
+    template_name = 'promo/search_results.html'
+
+    def get_queryset(self):
+        queryset = Offer.objects.all()
+        query = self.request.GET.get('q')
+
+        city = self.request.GET.get('city', None)
+
+        # if city:
+        #     city_id = self.request.GET['city']
+
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(partner__name__icontains=query)
+            )
+
+        if city and city.isdigit():
+            city_id = self.request.GET['city']
+            queryset = queryset.filter(city_id=city_id)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')  # Добавляем поисковый запрос в контекст
+        context['cities'] = City.objects.all()
+        city_id = self.request.GET.get('city')
+        if city_id:
+            context['selected_city'] = city_id
+
+        return context
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()

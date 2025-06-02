@@ -5,12 +5,10 @@ from .models import City, Category, Partner, Offer
 admin.site.register(City)
 admin.site.register(Category)
 admin.site.register(Partner)
-#admin.site.register(Offer)
+# admin.site.register(Offer)
+
 
 @admin.register(Offer)
 class OfferAdmin(admin.ModelAdmin):
-    """
-    Кастомизация отображения модели Offer в админке: фильтрация по категории и партнёру.
-    """
+    """Кастомизация отображения модели Offer в админке: фильтрация по категории и партнёру."""
     list_filter = ("category_id", "partner__name")
-

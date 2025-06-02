@@ -1,19 +1,28 @@
 {% if page_obj.paginator.num_pages > 1 %}
-<nav aria-label="Page navigation" class="mt-4">
+<nav aria-label="Навигация по страницам" class="mt-4">
     <ul class="pagination justify-content-center">
+        {# Кнопка "В начало" и "Предыдущая" #}
         {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page=1{% if selected_city %}&city={{ selected_city }}{% endif %}{% if query %}&q={{ query }}{% endif %}" aria-label="First">
+                <a class="page-link" href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="В начало">
                     <span aria-hidden="true">&laquo;&laquo;</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if query %}&q={{ query }}{% endif %}" aria-label="Previous">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Предыдущая">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&laquo;&laquo;</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&laquo;</span>
+            </li>
         {% endif %}
 
+        {# Номера страниц #}
         {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
                 <li class="page-item active">
@@ -21,23 +30,35 @@
                 </li>
             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ num }}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+                    <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                </li>
+            {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
                 </li>
             {% endif %}
         {% endfor %}
 
+        {# Кнопка "Следующая" и "В конец" #}
         {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if query %}&q={{ query }}{% endif %}" aria-label="Next">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Следующая">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if query %}&q={{ query }}{% endif %}" aria-label="Last">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="В конец">
                     <span aria-hidden="true">&raquo;&raquo;</span>
                 </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&raquo;</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&raquo;&raquo;</span>
             </li>
         {% endif %}
     </ul>
 </nav>
-{% endif %} 
+{% endif %}

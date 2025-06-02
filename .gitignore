@@ -54,6 +54,9 @@ htmlcov/
 *.sqlite3
 *.db
 
+.env
+
+
 # Logs
 logs/
 *.log

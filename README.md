@@ -188,6 +188,20 @@ python manage.py runserver
 - `PATCH /api/offers/{id}/` - частичное обновление акции
 - `DELETE /api/offers/{id}/` - удаление акции
 
+##### Пример жсона для post запроса
+-    "title": "Скидка 20% на первый месяц",
+-    "description": "Специальное предложение для новых клиентов",
+-    "promo_code": "NEW20",
+-    "discount": 20,
+-    "valid_from": "2024-03-20",
+-    "valid_to": "2024-04-20",
+-    "city_id": 1,
+-    "category_id": 2,
+-    "partner_id": 3
+
+
+
+
 #### Специальные эндпоинты для акций
 
 - `GET /api/offers/active/` - список активных акций
@@ -227,10 +241,5 @@ python manage.py runserver
 python manage.py test
 ```
 
-### Проверка кода
 
-```bash
-pylint ufanet_project/
-autopep8 --in-place --aggressive --aggressive ufanet_project/
-```
 

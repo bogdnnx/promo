@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+#  db:
+#    image: postgres:15-alpine
+#    restart: always
+#    command: postgres -c wal_level=logical -c max_replication_slots=10
+#    environment:
+#      POSTGRES_USER: user
+#      POSTGRES_PASSWORD: 111
+#      POSTGRES_DB: ufanet_db
+#    volumes:
+#      - db_data:/var/lib/postgresql/data
+#    ports:
+#      - "5434:5432"
+#    networks:
+#      - dbnet
+#    container_name: postgres_db
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U user -d ufanet_db"]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
   db:
     image: postgres:15-alpine
     restart: always
@@ -17,10 +37,11 @@ services:
       - dbnet
     container_name: postgres_db
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d ufanet_db"]
+      test: [ "CMD-SHELL", "pg_isready -U user -d ufanet_db" ]
       interval: 5s
       timeout: 5s
       retries: 5
+
 
   web:
     build:
@@ -68,6 +89,53 @@ services:
     networks:
       - dbnet
     container_name: telegram_bot
+
+  kafka:
+    image: bitnami/kafka:latest
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    ports:
+      - "9092:9092"
+    networks:
+      - dbnet
+    container_name: kafka_server
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  wal-listener:
+    image: ihippik/wal-listener:latest
+    volumes:
+      - ./wal-listener/config.yml:/app/config.yml
+    environment:
+      - WAL_DATABASE_HOST=db
+      - WAL_DATABASE_PORT=5432
+      - WAL_DATABASE_NAME=ufanet_db
+      - WAL_DATABASE_USER=user
+      - WAL_DATABASE_PASSWORD=111
+      - WAL_PUBLISHER_TYPE=kafka
+      - WAL_PUBLISHER_ADDRESS=kafka:9092
+      - WAL_PUBLISHER_TOPIC=wal_listener
+      - WAL_LISTENER_SLOTNAME=wal_listener_slot
+    depends_on:
+      kafka:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    networks:
+      - dbnet
+    container_name: wal_listener
 
 
 volumes:

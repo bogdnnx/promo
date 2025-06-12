@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    command: postgres -c wal_level=logical -c max_replication_slots=10
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 111
+      POSTGRES_DB: ufanet_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - dbnet
+    container_name: postgres_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d ufanet_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: ufanet_project/Dockerfile
+    env_file:
+      - ./ufanet_project/.env.docker
+    volumes:
+      - ./ufanet_project:/app
+      - ./media:/app/media #1 изменение после работающего варианта
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dbnet
+    container_name: django_web
+
+volumes:
+  db_data:
+
+networks:
+  dbnet:
+    name: ufanet_network
+    driver: bridge

@@ -55,6 +55,21 @@ services:
     container_name: nginx_server
 
 
+  tg_bot:
+    build:
+      context: .
+      dockerfile: tg_bot/Dockerfile
+    env_file:
+      - ./tg_bot/.env
+    volumes:
+      - ./tg_bot:/app/tg_bot
+    depends_on:
+      - web
+    networks:
+      - dbnet
+    container_name: telegram_bot
+
+
 volumes:
   db_data:
 

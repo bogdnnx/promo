@@ -38,7 +38,22 @@ services:
         condition: service_healthy
     networks:
       - dbnet
+      - nginx_network
     container_name: django_web
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./media:/app/media
+      - ./ufanet_project/static:/app/static
+    depends_on:
+      - web
+    networks:
+      - nginx_network
+    container_name: nginx_server
+
 
 volumes:
   db_data:
@@ -46,4 +61,7 @@ volumes:
 networks:
   dbnet:
     name: ufanet_network
+    driver: bridge
+  nginx_network:
+    name: nginx_network
     driver: bridge

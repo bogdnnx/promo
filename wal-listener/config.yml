@@ -1,3 +1,45 @@
+#listener:
+#  slotName: wal_listener_slot
+#  refreshConnection: 30s
+#  heartbeatInterval: 10s
+#  filter:
+#    tables:
+#      promo_offer:
+#        - insert
+#        - update
+#        - delete
+#      promo_category:
+#        - insert
+#        - update
+#        - delete
+#
+#  topicsMap:
+#    public_promo_offer: "promo_offers"
+#    public_promo_category: "promo_categories"
+#
+#
+#logger:
+#  level: info
+#  fmt: json
+#
+#database:
+#  host: db
+#  port: 5432
+#  name: ufanet_db
+#  user: user
+#  password: 111
+#  debug: false
+#
+#publisher:
+#  type: kafka
+#  address: kafka:9092
+#  topic: "wal_listener"
+#  topicPrefix: ""
+#
+#monitoring:
+#  promAddr: ":2112"
+
+
 listener:
   slotName: wal_listener_slot
   refreshConnection: 30s
@@ -12,11 +54,21 @@ listener:
         - insert
         - update
         - delete
-
+      promo_city:
+        - insert
+        - update
+        - delete
+      promo_partner:
+        - insert
+        - update
+        - delete
   topicsMap:
     public_promo_offer: "promo_offers"
     public_promo_category: "promo_categories"
-
+    public_promo_city: "cities"
+    public_promo_partner: "partners"
+  includeOldValues: true
+  includeNewValues: true
 
 logger:
   level: info

@@ -1,26 +1,7 @@
 version: '3.8'
 
 services:
-#  db:
-#    image: postgres:15-alpine
-#    restart: always
-#    command: postgres -c wal_level=logical -c max_replication_slots=10
-#    environment:
-#      POSTGRES_USER: user
-#      POSTGRES_PASSWORD: 111
-#      POSTGRES_DB: ufanet_db
-#    volumes:
-#      - db_data:/var/lib/postgresql/data
-#    ports:
-#      - "5434:5432"
-#    networks:
-#      - dbnet
-#    container_name: postgres_db
-#    healthcheck:
-#      test: ["CMD-SHELL", "pg_isready -U user -d ufanet_db"]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 5
+
   db:
     image: postgres:15-alpine
     restart: always
@@ -82,10 +63,15 @@ services:
       dockerfile: tg_bot/Dockerfile
     env_file:
       - ./tg_bot/.env
+      - ./ufanet_project/.env.docker
     volumes:
       - ./tg_bot:/app/tg_bot
+      - ./ufanet_project:/app/ufanet_project
     depends_on:
       - web
+      - kafka
+      - wal-listener
+      - db
     networks:
       - dbnet
     container_name: telegram_bot

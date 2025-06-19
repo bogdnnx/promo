@@ -1,12 +1,10 @@
-
-
-
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
 from tg_bot.config import TELEGRAM_BOT_TOKEN
+from tg_bot.db_utils import get_all_subscribed_users
 from tg_bot.kafka_consumer import TelegramKafkaConsumer
 from tg_bot.keyboards.reply import get_main_keyboard
 
@@ -43,7 +41,40 @@ async def subscribe_to_notifications(message: types.Message):
         await message.answer("Вы успешно подписались на уведомления!")
 
 
+# async def main():
+#     # Инициализация Kafka consumer
+#     kafka_consumer = TelegramKafkaConsumer(subscribed_users)
+#
+#     # Создаем задачи
+#     polling_task = asyncio.create_task(dp.start_polling(bot))
+#     kafka_task = asyncio.create_task(kafka_consumer.process_messages())
+#
+#     try:
+#         # Запускаем оба процесса параллельно
+#         await asyncio.gather(polling_task, kafka_task)
+#     except asyncio.CancelledError:
+#         # Обработка отмены задач
+#         polling_task.cancel()
+#         kafka_task.cancel()
+#         await asyncio.gather(polling_task, kafka_task, return_exceptions=True)
+#     finally:
+#         # Закрываем соединения
+#         await bot.session.close()
+#         kafka_consumer.consumer.close()
+#
+#
+# if __name__ == '__main__':
+#     try:
+#         asyncio.run(main())
+#     except KeyboardInterrupt:
+#         print("Бот остановлен")
+
+
 async def main():
+    # Получаем список всех подписчиков из базы данных
+    subscribed_users = get_all_subscribed_users()
+    print(f"Загружено подписчиков из БД: {len(subscribed_users)}")
+
     # Инициализация Kafka consumer
     kafka_consumer = TelegramKafkaConsumer(subscribed_users)
 

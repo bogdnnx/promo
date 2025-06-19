@@ -24,7 +24,7 @@ async def subscribe(message: Message):
     )
 
 
-@router.message(F.text == "❌ Отписаться от уведомлений")
+@router.message(F.text == "Отписаться от уведомлений")
 async def unsubscribe(message: Message):
     """Обработчик отписки от уведомлений"""
     user_id = message.from_user.id

@@ -52,62 +52,84 @@
 #     return TelegramSubscription.objects.filter(is_active=True).count()
 
 
+# import os
+# import sys
+# import django
+# from typing import List, Optional
+#
+# # Добавляем пути к Django проекту в sys.path
+# sys.path.append('/app')
+# sys.path.append('/app/ufanet_project')
+
+# # Выводим структуру для диагностики
+# print("=== ДИАГНОСТИКА ===")
+# print(f"Текущая директория: {os.getcwd()}")
+# print(f"Содержимое /app: {os.listdir('/app')}")
+# print(f"Содержимое /app/ufanet_project: {os.listdir('/app/ufanet_project')}")
+#
+# # Проверяем, есть ли файл settings.py
+# settings_paths = [
+#     '/app/ufanet_project/settings.py',
+#     '/app/ufanet_project/ufanet_project/settings.py',
+#     '/app/settings.py'
+# ]
+#
+# for path in settings_paths:
+#     if os.path.exists(path):
+#         print(f"✅ Найден settings.py: {path}")
+#     else:
+#         print(f"❌ Не найден: {path}")
+#
+# # Пробуем найти правильный путь
+# if os.path.exists('/app/ufanet_project/ufanet_project'):
+#     print(f"Содержимое /app/ufanet_project/ufanet_project: {os.listdir('/app/ufanet_project/ufanet_project')}")
+#
+# print("=== КОНЕЦ ДИАГНОСТИКИ ===")
+#
+# # Пока отключаем Django setup для диагностики
+# # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ufanet_project.ufanet_project.settings')
+# # django.setup()
+# # from promo.models import TelegramSubscription
+#
+# # Временные заглушки функций
+# def add_subscription(user_id: int, username: str = None) -> bool:
+#     print(f"Добавление подписки: {user_id}, {username}")
+#     return True
+#
+# def remove_subscription(user_id: int) -> bool:
+#     print(f"Удаление подписки: {user_id}")
+#     return True
+#
+# def is_subscribed(user_id: int) -> bool:
+#     print(f"Проверка подписки: {user_id}")
+#     return False
+#
+# def get_all_subscribed_users() -> List[int]:
+#     print("Получение всех подписчиков")
+#     return []
+#
+# def get_total_subscribers() -> int:
+#     print("Подсчет подписчиков")
+#     return 0
+
+
 import os
-import sys
-import django
-from typing import List, Optional
 
-# Добавляем пути к Django проекту в sys.path
-sys.path.append('/app')
-sys.path.append('/app/ufanet_project')
+SUBSCRIBERS_FILE = os.path.join(os.path.dirname(__file__), "subscribers.txt")
 
-# Выводим структуру для диагностики
-print("=== ДИАГНОСТИКА ===")
-print(f"Текущая директория: {os.getcwd()}")
-print(f"Содержимое /app: {os.listdir('/app')}")
-print(f"Содержимое /app/ufanet_project: {os.listdir('/app/ufanet_project')}")
+def get_all_subscribed_users():
+    if not os.path.exists(SUBSCRIBERS_FILE):
+        return []
+    with open(SUBSCRIBERS_FILE, "r") as f:
+        return [int(line.strip()) for line in f if line.strip().isdigit()]
 
-# Проверяем, есть ли файл settings.py
-settings_paths = [
-    '/app/ufanet_project/settings.py',
-    '/app/ufanet_project/ufanet_project/settings.py',
-    '/app/settings.py'
-]
+def load_subscribers():
+    if not os.path.exists(SUBSCRIBERS_FILE):
+        return set()
+    with open(SUBSCRIBERS_FILE, "r") as f:
+        return set(int(line.strip()) for line in f if line.strip().isdigit())
 
-for path in settings_paths:
-    if os.path.exists(path):
-        print(f"✅ Найден settings.py: {path}")
-    else:
-        print(f"❌ Не найден: {path}")
-
-# Пробуем найти правильный путь
-if os.path.exists('/app/ufanet_project/ufanet_project'):
-    print(f"Содержимое /app/ufanet_project/ufanet_project: {os.listdir('/app/ufanet_project/ufanet_project')}")
-
-print("=== КОНЕЦ ДИАГНОСТИКИ ===")
-
-# Пока отключаем Django setup для диагностики
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ufanet_project.ufanet_project.settings')
-# django.setup()
-# from promo.models import TelegramSubscription
-
-# Временные заглушки функций
-def add_subscription(user_id: int, username: str = None) -> bool:
-    print(f"Добавление подписки: {user_id}, {username}")
-    return True
-
-def remove_subscription(user_id: int) -> bool:
-    print(f"Удаление подписки: {user_id}")
-    return True
-
-def is_subscribed(user_id: int) -> bool:
-    print(f"Проверка подписки: {user_id}")
-    return False
-
-def get_all_subscribed_users() -> List[int]:
-    print("Получение всех подписчиков")
-    return []
-
-def get_total_subscribers() -> int:
-    print("Подсчет подписчиков")
-    return 0
+def save_subscribers(subscribers):
+    with open(SUBSCRIBERS_FILE, "w") as f:
+        for user_id in subscribers:
+            f.write(f"{user_id}\n")

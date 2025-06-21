@@ -1,6 +1,6 @@
-# Ufanet Django Telegram Bot
+# Django-Postgre-Wal-Kafka-Telegram Bot
 
-Telegram-бот для уведомлений о событиях в системе Ufanet с интеграцией Kafka и WAL-listener.
+Telegram-бот для уведомлений о событиях в системе с интеграцией Kafka и WAL-listener.
 
 ## Быстрый запуск
 

@@ -136,7 +136,6 @@ async def cmd_start(message: types.Message):
         reply_markup=keyboard
     )
 
-# Можно убрать обработчики подписки/отписки или оставить заглушки
 @dp.message(lambda message: message.text == "📝 Подписаться на уведомления")
 async def subscribe_to_notifications(message: types.Message):
     user_id = message.from_user.id

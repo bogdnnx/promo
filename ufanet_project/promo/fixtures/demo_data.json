@@ -1,0 +1,173 @@
+[
+  {
+    "model": "promo.city",
+    "pk": 1,
+    "fields": {"name": "Уфа"}
+  },
+  {
+    "model": "promo.city",
+    "pk": 2,
+    "fields": {"name": "Москва"}
+  },
+  {
+    "model": "promo.city",
+    "pk": 3,
+    "fields": {"name": "Казань"}
+  },
+  {
+    "model": "promo.city",
+    "pk": 4,
+    "fields": {"name": "Екатеринбург"}
+  },
+  {
+    "model": "promo.category",
+    "pk": 1,
+    "fields": {"name": "Доставка еды", "icon": ""}
+  },
+  {
+    "model": "promo.category",
+    "pk": 2,
+    "fields": {"name": "Для бизнеса", "icon": ""}
+  },
+  {
+    "model": "promo.category",
+    "pk": 3,
+    "fields": {"name": "Красота и здоровье", "icon": ""}
+  },
+  {
+    "model": "promo.category",
+    "pk": 4,
+    "fields": {"name": "Товары для дома", "icon": ""}
+  },
+  {
+    "model": "promo.category",
+    "pk": 5,
+    "fields": {"name": "Одежда и аксессуары", "icon": ""}
+  },
+  {
+    "model": "promo.partner",
+    "pk": 1,
+    "fields": {"name": "Чиббис", "description": "Сервис доставки еды", "logo": ""}
+  },
+  {
+    "model": "promo.partner",
+    "pk": 2,
+    "fields": {"name": "Фудзияма", "description": "Суши и роллы", "logo": ""}
+  },
+  {
+    "model": "promo.partner",
+    "pk": 3,
+    "fields": {"name": "ВкусВилл", "description": "Магазин продуктов", "logo": ""}
+  },
+  {
+    "model": "promo.partner",
+    "pk": 4,
+    "fields": {"name": "Zenden", "description": "Обувь и аксессуары", "logo": ""}
+  },
+  {
+    "model": "promo.partner",
+    "pk": 5,
+    "fields": {"name": "Л'Этуаль", "description": "Косметика и парфюмерия", "logo": ""}
+  },
+  {
+    "model": "promo.partner",
+    "pk": 6,
+    "fields": {"name": "Fix Price", "description": "Товары для дома", "logo": ""}
+  },
+  {
+    "model": "promo.offer",
+    "pk": 1,
+    "fields": {
+      "title": "1600 бонусов на заказ еды из ресторанов",
+      "description": "При регистрации в сервисе 'Чиббис' вам будет начислено 600 баллов, которые можно потратить на заказы.",
+      "discount": "1600 бонусов",
+      "promo_code": "Уфанет1000",
+      "category": 1,
+      "partner": 1,
+      "city": 1,
+      "valid_from": "2024-01-01",
+      "valid_to": "2025-12-31",
+      "image": ""
+    }
+  },
+  {
+    "model": "promo.offer",
+    "pk": 2,
+    "fields": {
+      "title": "Скидка 54% на суши",
+      "description": "Скидка 54% от компании 'Фудзияма' на все заказы.",
+      "discount": "Скидка 54%",
+      "promo_code": "",
+      "category": 1,
+      "partner": 2,
+      "city": 1,
+      "valid_from": "2024-01-01",
+      "valid_to": "2025-12-31",
+      "image": ""
+    }
+  },
+  {
+    "model": "promo.offer",
+    "pk": 3,
+    "fields": {
+      "title": "Скидка 250 ₽ в ВкусВилл",
+      "description": "Скидка 250 рублей на первый заказ в магазине 'ВкусВилл' по промокоду.",
+      "discount": "Скидка 250 ₽",
+      "promo_code": "VV2024",
+      "category": 1,
+      "partner": 3,
+      "city": 2,
+      "valid_from": "2024-02-01",
+      "valid_to": "2025-12-31",
+      "image": ""
+    }
+  },
+  {
+    "model": "promo.offer",
+    "pk": 4,
+    "fields": {
+      "title": "Скидка 20% на обувь Zenden",
+      "description": "Скидка 20% на всю коллекцию весна-лето в магазинах Zenden.",
+      "discount": "Скидка 20%",
+      "promo_code": "SPRING20",
+      "category": 5,
+      "partner": 4,
+      "city": 3,
+      "valid_from": "2024-03-01",
+      "valid_to": "2024-09-01",
+      "image": ""
+    }
+  },
+  {
+    "model": "promo.offer",
+    "pk": 5,
+    "fields": {
+      "title": "Подарок при покупке в Л'Этуаль",
+      "description": "Подарок при покупке от 2000 ₽ в магазинах Л'Этуаль.",
+      "discount": "Подарок",
+      "promo_code": "",
+      "category": 3,
+      "partner": 5,
+      "city": 4,
+      "valid_from": "2024-01-15",
+      "valid_to": "2024-12-31",
+      "image": ""
+    }
+  },
+  {
+    "model": "promo.offer",
+    "pk": 6,
+    "fields": {
+      "title": "Скидка 10% на всё в Fix Price",
+      "description": "Скидка 10% на все товары для дома в магазинах Fix Price.",
+      "discount": "Скидка 10%",
+      "promo_code": "FIX10",
+      "category": 4,
+      "partner": 6,
+      "city": 1,
+      "valid_from": "2024-04-01",
+      "valid_to": "2024-06-30",
+      "image": ""
+    }
+  }
+] 

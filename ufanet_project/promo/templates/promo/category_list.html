@@ -1,0 +1,25 @@
+{% extends 'promo/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Категории акций</h1>
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                {% if category.icon %}
+                <img src="{{ category.icon.url }}" class="card-img-top" alt="{{ category.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ category.name }}</h5>
+                    <p class="card-text">{{ category.description }}</p>
+                    <a href="{% url 'offer_list' category.id %}?city={{ selected_city }}" class="btn btn-primary">Смотреть акции</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% include 'promo/pagination.html' with page_obj=categories %}
+</div>
+{% endblock %}

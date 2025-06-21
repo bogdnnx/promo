@@ -2,32 +2,71 @@
 
 Telegram-бот для уведомлений о событиях в системе Ufanet с интеграцией Kafka и WAL-listener.
 
-## Архитектура проекта
+## Быстрый запуск
 
-Проект состоит из следующих компонентов:
+### Предварительные требования
 
-- **Telegram Bot** (`tg_bot/`) - основной бот для отправки уведомлений
-- **Kafka Consumer** - обработчик сообщений из Kafka
-- **WAL-listener** - слушатель изменений в базе данных PostgreSQL
-- **Django Backend** - веб-интерфейс для управления
+- Docker и Docker Compose
+- Git
 
-### Структура проекта
+### 1. Клонирование и запуск
+
+```bash
+git clone <repository-url>
+cd ufanet_django
+
+# Запуск всех сервисов
+docker-compose up --build
+
+# Или в фоновом режиме
+docker-compose up -d
+```
+
+### 2. Доступ к сервисам
+
+После запуска будут доступны:
+
+- **Django Web** - http://localhost:8000
+- **Nginx** - http://localhost:8080  
+- **PostgreSQL** - localhost:5434
+- **Kafka** - localhost:9092
+
+### 3. Остановка
+
+```bash
+docker-compose down
+```
+
+## Архитектура
+
+Проект состоит из:
+
+- **Django Web** - веб-интерфейс
+- **Telegram Bot** - бот для уведомлений
+- **Kafka** - обработка сообщений
+- **WAL-listener** - мониторинг изменений БД
+- **PostgreSQL** - база данных
+- **Nginx** - веб-сервер
+
+## Тестирование
+
+```bash
+# Запуск тестов
+sh run_tests.sh
+
+
+```
+
+## Структура проекта
 
 ```
 ufanet_django/
-├── tg_bot/                    # Telegram бот
-│   ├── bot.py                # Основная логика бота
-│   ├── config.py             # Конфигурация
-│   ├── db_utils.py           # Утилиты для работы с подписчиками
-│   ├── kafka_consumer.py     # Kafka consumer
-│   ├── keyboards/            # Клавиатуры бота
-│   ├── handlers/             # Обработчики команд
-│   ├── utils/                # Утилиты
-│   └── tests/                # Тесты
-├── ufanet/                   # Django приложение
-├── docker-compose.yml        # Docker конфигурация
-├── Dockerfile               # Docker образ
-└── requirements.txt         # Зависимости
+├── ufanet_project/     # Django приложение
+├── tg_bot/            # Telegram бот
+├── wal-listener/      # WAL-listener конфигурация
+├── nginx/             # Nginx конфигурация
+├── docker-compose.yml # Docker конфигурация
+└── README.md
 ```
 
 ## Установка и запуск
@@ -38,6 +77,7 @@ ufanet_django/
 - Docker и Docker Compose
 - PostgreSQL
 - Apache Kafka
+- Wal-listener от ihippik
 
 ### 1. Клонирование репозитория
 
@@ -46,27 +86,9 @@ git clone <repository-url>
 cd ufanet_django
 ```
 
-### 2. Настройка переменных окружения
 
-Создайте файл `.env` в корне проекта:
 
-```env
-# Telegram Bot
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/ufanet
-
-# Kafka
-KAFKA_BOOTSTRAP_SERVERS=localhost:9092
-KAFKA_TOPIC=ufanet_events
-
-# Django
-DJANGO_SECRET_KEY=your_secret_key
-DJANGO_DEBUG=True
-```
-
-### 3. Запуск с Docker
+### 2. Запуск с Docker
 
 ```bash
 # Сборка и запуск всех сервисов
@@ -76,24 +98,6 @@ docker-compose up --build
 docker-compose up -d
 ```
 
-### 4. Запуск без Docker
-
-```bash
-# Установка зависимостей
-pip install -r requirements.txt
-
-# Применение миграций Django
-python manage.py migrate
-
-# Запуск Django сервера
-python manage.py runserver
-
-# Запуск Telegram бота (в отдельном терминале)
-python -m tg_bot.bot
-
-# Запуск Kafka consumer (в отдельном терминале)
-python -m tg_bot.kafka_consumer
-```
 
 ## Функциональность
 
@@ -102,7 +106,6 @@ python -m tg_bot.kafka_consumer
 - **Команда /start** - приветствие и главное меню
 - **Подписка на уведомления** - добавление пользователя в список подписчиков
 - **Отписка от уведомлений** - удаление пользователя из списка подписчиков
-- **Автоматические уведомления** - отправка сообщений при событиях в системе
 
 ### Kafka Consumer
 
@@ -117,23 +120,7 @@ python -m tg_bot.kafka_consumer
 - Отправка событий в Kafka
 - Поддержка операций INSERT, UPDATE, DELETE
 
-## Тестирование
 
-### Запуск тестов
-
-```bash
-# Все тесты с красивым отчетом
-python run_tests.py
-
-# Обычный запуск тестов
-python -m pytest tg_bot/tests/ -v
-
-# С покрытием кода
-python -m pytest tg_bot/tests/ -v --cov=tg_bot --cov-report=html
-
-# Конкретный тест
-python -m pytest tg_bot/tests/test_bot.py::TestBotHandlers::test_cmd_start -v
-```
 
 ### Покрытие тестами
 
@@ -162,45 +149,8 @@ python -m pytest tg_bot/tests/test_bot.py::TestBotHandlers::test_cmd_start -v
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 ```
 
-### Kafka
 
-Настройки Kafka в `tg_bot/kafka_consumer.py`:
 
-```python
-KAFKA_BOOTSTRAP_SERVERS = ['localhost:9092']
-KAFKA_TOPIC = 'ufanet_events'
-```
-
-### WAL-listener
-
-Конфигурация в `config.yml`:
-
-```yaml
-database:
-  host: localhost
-  port: 5432
-  name: ufanet
-  user: postgres
-  password: password
-
-kafka:
-  bootstrap_servers: localhost:9092
-  topic: ufanet_events
-```
-
-## Разработка
-
-### Добавление новых команд бота
-
-1. Создайте обработчик в `tg_bot/handlers/`
-2. Добавьте команду в `tg_bot/bot.py`
-3. Создайте тесты в `tg_bot/tests/`
-
-### Добавление новых типов уведомлений
-
-1. Обновите логику в `tg_bot/kafka_consumer.py`
-2. Добавьте форматирование сообщений
-3. Обновите тесты
 
 ### Структура тестов
 
@@ -215,30 +165,6 @@ tg_bot/tests/
 └── test_integration.py     # Интеграционные тесты
 ```
 
-## Утилиты
-
-### Очистка проекта
-
-```bash
-# Удаление временных файлов и отчетов покрытия
-./cleanup.sh
-```
-
-## Мониторинг и логирование
-
-### Логи
-
-Логи сохраняются в:
-- `logs/bot.log` - логи Telegram бота
-- `logs/kafka.log` - логи Kafka consumer
-- `logs/wal_listener.log` - логи WAL-listener
-
-### Метрики
-
-- Количество подписчиков
-- Количество отправленных уведомлений
-- Время обработки сообщений
-- Ошибки и исключения
 
 ## Безопасность
 
@@ -251,11 +177,6 @@ tg_bot/tests/
 
 При возникновении проблем:
 
-1. Проверьте логи в `logs/`
+1. Проверьте логи 
 2. Убедитесь в корректности конфигурации
 3. Проверьте подключение к базе данных и Kafka
-4. Запустите тесты для проверки функциональности
-
-## Лицензия
-
-MIT License 

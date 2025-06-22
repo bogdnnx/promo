@@ -56,24 +56,6 @@ ufanet_django/
 - Apache Kafka
 - Wal-listener от ihippik
 
-### 1. Клонирование репозитория
-
-```bash
-git clone <repository-url>
-cd ufanet_django
-```
-
-
-
-### 2. Запуск с Docker
-
-```bash
-# Сборка и запуск всех сервисов
-docker-compose up --build
-
-# Запуск в фоновом режиме
-docker-compose up -d
-```
 
 
 ## Функциональность

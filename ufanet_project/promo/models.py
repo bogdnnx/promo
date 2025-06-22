@@ -4,6 +4,7 @@ from django.db import models
 
 class City(models.Model):
     """Модель города, в котором действуют акции."""
+
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -16,11 +17,9 @@ class City(models.Model):
 
 class Category(models.Model):
     """Модель категории акций (например, еда, спорт, развлечения)."""
+
     name = models.CharField(max_length=100)
-    icon = models.ImageField(
-        upload_to="category_icons/",
-        null=True,
-        blank=True)
+    icon = models.ImageField(upload_to="category_icons/", null=True, blank=True)
 
     class Meta:
         ordering = ["id"]  # Сортировка по id
@@ -32,6 +31,7 @@ class Category(models.Model):
 
 class Partner(models.Model):
     """Модель партнёра, предоставляющего акции."""
+
     name = models.CharField(max_length=100)
     description = models.TextField()
     # logo = models.ImageField(upload_to='partner_logos/', null=True, blank=True)
@@ -46,6 +46,7 @@ class Partner(models.Model):
 
 class Offer(models.Model):
     """Модель акции или скидки, предоставляемой партнёром."""
+
     title = models.CharField(max_length=200)
     description = models.TextField()
     discount = models.CharField(max_length=50)
@@ -65,9 +66,9 @@ class Offer(models.Model):
         ordering = ["id"]  # Сортировка по id
 
 
-
 class TelegramSubscription(models.Model):
     """Модель для хранения подписок пользователей Telegram."""
+
     user_id = models.BigIntegerField(unique=True, verbose_name="ID пользователя Telegram")
     username = models.CharField(max_length=100, blank=True, null=True, verbose_name="Username")
     is_active = models.BooleanField(default=True, verbose_name="Активна")
@@ -84,8 +85,7 @@ class TelegramSubscription(models.Model):
     def add_subscription(cls, user_id, username=None):
         """Добавить или обновить подписку пользователя."""
         subscription, created = cls.objects.update_or_create(
-            user_id=user_id,
-            defaults={'username': username, 'is_active': True}
+            user_id=user_id, defaults={"username": username, "is_active": True}
         )
         return subscription
 
@@ -108,4 +108,4 @@ class TelegramSubscription(models.Model):
     @classmethod
     def get_all_subscribed_users(cls):
         """Получить список всех активных подписчиков."""
-        return list(cls.objects.filter(is_active=True).values_list('user_id', flat=True))
+        return list(cls.objects.filter(is_active=True).values_list("user_id", flat=True))

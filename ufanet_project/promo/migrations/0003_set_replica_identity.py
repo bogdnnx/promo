@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('promo', '0002_remove_partner_logo'),
+        ("promo", "0002_remove_partner_logo"),
     ]
 
     operations = [
@@ -22,6 +22,6 @@ class Migration(migrations.Migration):
                 ALTER TABLE promo_category REPLICA IDENTITY DEFAULT;
                 ALTER TABLE promo_city REPLICA IDENTITY DEFAULT;
                 ALTER TABLE promo_partner REPLICA IDENTITY DEFAULT;
-                """
+                """,
         ),
     ]

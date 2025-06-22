@@ -1,11 +1,14 @@
-import json
 import asyncio
+import json
 import time
+
+from aiogram import Bot
 from kafka import KafkaConsumer
 from kafka.errors import NoBrokersAvailable
-from aiogram import Bot
+
 from tg_bot.config import TELEGRAM_BOT_TOKEN
 from tg_bot.db_utils import get_all_subscribed_users
+
 
 class TelegramKafkaConsumer:
     def __init__(self, _):
@@ -15,7 +18,6 @@ class TelegramKafkaConsumer:
         self.consumer = self._connect_to_kafka()
         print("Бот инициализирован")
         self.get_subscribers = get_all_subscribed_users
-
 
     def _connect_to_kafka(self, max_retries=30, retry_delay=1):
         """Подключение к Kafka с повторными попытками"""
@@ -51,51 +53,51 @@ class TelegramKafkaConsumer:
         """Форматирование сообщения для Telegram"""
         print(f"Форматирование сообщения: {message.value}")
         data = message.value
-        action = data['action']
-        table = data['table']
+        action = data["action"]
+        table = data["table"]
 
         print(f"Действие: {action}, Таблица: {table}")
 
         try:
-            if table == 'promo_category':
-                if action == 'INSERT':
+            if table == "promo_category":
+                if action == "INSERT":
                     return f"🆕 Новая категория: {data['data']['name']}"
-                elif action == 'UPDATE':
-                    old_name = data.get('dataOld', {}).get('name', '')
-                    new_name = data['data']['name']
+                elif action == "UPDATE":
+                    old_name = data.get("dataOld", {}).get("name", "")
+                    new_name = data["data"]["name"]
                     return f"📝 Обновлена категория: {old_name} → {new_name}"
-                elif action == 'DELETE':
-                    return f"❌ Удалена категория: {data.get('data', {}).get('name', 'Неизвестная категория')}"
+                elif action == "DELETE":
+                    return f"❌ Удалена категория: {data.get('dataOld', {}).get('name', 'Неизвестная категория')}"
 
-            elif table == 'promo_offer':
-                if action == 'INSERT':
+            elif table == "promo_offer":
+                if action == "INSERT":
                     return f"🆕 Новое предложение: {data['data']['title']}"
-                elif action == 'UPDATE':
-                    old_title = data.get('dataOld', {}).get('title', '')
-                    new_title = data['data']['title']
+                elif action == "UPDATE":
+                    old_title = data.get("dataOld", {}).get("title", "")
+                    new_title = data["data"]["title"]
                     return f"📝 Обновлено предложение: {old_title} → {new_title}"
-                elif action == 'DELETE':
-                    return f"❌ Удалено предложение: {data.get('data', {}).get('title', 'Неизвестное предложение')}"
+                elif action == "DELETE":
+                    return f"❌ Удалено предложение: {data.get('dataOld', {}).get('title', 'Неизвестное предложение')}"
 
-            elif table == 'promo_city':
-                if action == 'INSERT':
+            elif table == "promo_city":
+                if action == "INSERT":
                     return f"🏙️ Новый город: {data['data']['name']}"
-                elif action == 'UPDATE':
-                    old_name = data.get('dataOld', {}).get('name', '')
-                    new_name = data['data']['name']
+                elif action == "UPDATE":
+                    old_name = data.get("dataOld", {}).get("name", "")
+                    new_name = data["data"]["name"]
                     return f"📝 Обновлен город: {old_name} → {new_name}"
-                elif action == 'DELETE':
-                    return f"❌ Удален город: {data['data']['name']}"
+                elif action == "DELETE":
+                    return f"❌ Удален город: {data.get('dataOld', {}).get('name', 'Неизвестный город')}"
 
-            elif table == 'promo_partner':
-                if action == 'INSERT':
+            elif table == "promo_partner":
+                if action == "INSERT":
                     return f"🤝 Новый партнер: {data['data']['name']}"
-                elif action == 'UPDATE':
-                    old_name = data.get('dataOld', {}).get('name', '')
-                    new_name = data['data']['name']
+                elif action == "UPDATE":
+                    old_name = data.get("dataOld", {}).get("name", "")
+                    new_name = data["data"]["name"]
                     return f"📝 Обновлен партнер: {old_name} → {new_name}"
-                elif action == 'DELETE':
-                    return f"❌ Удален партнер: {data.get('data', {}).get('name', 'Неизвестный партнер')}"
+                elif action == "DELETE":
+                    return f"❌ Удален партнер: {data.get('dataOld', {}).get('name', 'Неизвестный партнер')}"
 
             return f"Изменение в {table}: {action}"
         except Exception as e:
@@ -106,20 +108,22 @@ class TelegramKafkaConsumer:
     async def process_messages(self):
         """Обработка сообщений из Kafka"""
         print("Начинаем обработку сообщений из Kafka...")
+        print(f"Подключенные топики: {self.consumer.subscription()}")
 
         try:
             print("Ожидаем сообщения из Kafka...")
             while True:
                 try:
-                    # Получаем актуальный список подписчиков из .env
-                    subscribed_users = self.get_subscribers()#get_all_subscribed_users()
+                    # Получаем актуальный список подписчиков
+                    subscribed_users = self.get_subscribers()  # get_all_subscribed_users()
                     print(f"Актуальные подписчики: {subscribed_users}")
 
                     # Получаем сообщения из Kafka
                     messages = self.consumer.poll(timeout_ms=1000)
+                    print(f"Получено сообщений из Kafka: {len(messages)}")
 
                     for tp, msgs in messages.items():
-                        print(f"Получены сообщения из топика {tp.topic}")
+                        print(f"Получены сообщения из топика {tp.topic}: {len(msgs)} сообщений")
                         for message in msgs:
                             try:
                                 print(f"Получено сообщение: {message.value}")
@@ -157,4 +161,5 @@ class TelegramKafkaConsumer:
             print(f"Ошибка при обработке сообщений: {e}")
             print(f"Тип ошибки: {type(e)}")
             import traceback
+
             print(f"Traceback: {traceback.format_exc()}")

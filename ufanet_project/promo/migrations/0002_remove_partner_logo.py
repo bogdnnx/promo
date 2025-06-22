@@ -7,13 +7,14 @@ class Migration(migrations.Migration):
     """
     Миграция для удаления поля logo из модели Partner.
     """
+
     dependencies = [
-        ('promo', '0001_initial'),
+        ("promo", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='partner',
-            name='logo',
+            model_name="partner",
+            name="logo",
         ),
     ]

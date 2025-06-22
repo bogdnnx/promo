@@ -8,50 +8,50 @@ class Migration(migrations.Migration):
     """
     Начальная миграция: создаёт таблицы для основных моделей приложения.
     """
+
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('icon', models.ImageField(blank=True, null=True, upload_to='category_icons/')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(max_length=100)),
+                ("icon", models.ImageField(blank=True, null=True, upload_to="category_icons/")),
             ],
         ),
         migrations.CreateModel(
-            name='City',
+            name="City",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='Partner',
+            name="Partner",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.TextField()),
-                ('logo', models.ImageField(blank=True, null=True, upload_to='partner_logos/')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(max_length=100)),
+                ("description", models.TextField()),
+                ("logo", models.ImageField(blank=True, null=True, upload_to="partner_logos/")),
             ],
         ),
         migrations.CreateModel(
-            name='Offer',
+            name="Offer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('description', models.TextField()),
-                ('discount', models.CharField(max_length=50)),
-                ('promo_code', models.CharField(blank=True, max_length=50, null=True)),
-                ('valid_from', models.DateField()),
-                ('valid_to', models.DateField()),
-                ('image', models.ImageField(blank=True, null=True, upload_to='offer_images/')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='promo.category')),
-                ('city', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='promo.city')),
-                ('partner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='promo.partner')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("title", models.CharField(max_length=200)),
+                ("description", models.TextField()),
+                ("discount", models.CharField(max_length=50)),
+                ("promo_code", models.CharField(blank=True, max_length=50, null=True)),
+                ("valid_from", models.DateField()),
+                ("valid_to", models.DateField()),
+                ("image", models.ImageField(blank=True, null=True, upload_to="offer_images/")),
+                ("category", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="promo.category")),
+                ("city", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="promo.city")),
+                ("partner", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="promo.partner")),
             ],
         ),
     ]

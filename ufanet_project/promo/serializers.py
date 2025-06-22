@@ -1,6 +1,8 @@
-from rest_framework import serializers
-from .models import City, Category, Partner, Offer
 from django.utils import timezone
+from rest_framework import serializers
+
+from .models import Category, City, Offer, Partner
+
 
 class CitySerializer(serializers.ModelSerializer):
     """
@@ -45,21 +47,11 @@ class OfferSerializer(serializers.ModelSerializer):
     city = CitySerializer(read_only=True)
     category = CategorySerializer(read_only=True)
     partner = PartnerSerializer(read_only=True)
-    city_id = serializers.PrimaryKeyRelatedField(
-        queryset=City.objects.all(),
-        source="city",
-        write_only=True
-    )
+    city_id = serializers.PrimaryKeyRelatedField(queryset=City.objects.all(), source="city", write_only=True)
     category_id = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(),
-        source="category",
-        write_only=True
+        queryset=Category.objects.all(), source="category", write_only=True
     )
-    partner_id = serializers.PrimaryKeyRelatedField(
-        queryset=Partner.objects.all(),
-        source="partner",
-        write_only=True
-    )
+    partner_id = serializers.PrimaryKeyRelatedField(queryset=Partner.objects.all(), source="partner", write_only=True)
     is_active = serializers.SerializerMethodField()
     days_left = serializers.SerializerMethodField()
 
@@ -81,7 +73,7 @@ class OfferSerializer(serializers.ModelSerializer):
             "partner_id",
             "is_active",
             "days_left",
-            "image"
+            "image",
         ]
         read_only_fields = ["is_active", "days_left"]
 
@@ -110,7 +102,5 @@ class OfferSerializer(serializers.ModelSerializer):
         """
         if data.get("valid_from") and data.get("valid_to"):
             if data["valid_from"] > data["valid_to"]:
-                raise serializers.ValidationError(
-                    "Дата начала не может быть позже даты окончания"
-                )
+                raise serializers.ValidationError("Дата начала не может быть позже даты окончания")
         return data

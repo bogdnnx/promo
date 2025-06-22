@@ -1,1 +1,1 @@
-# Тесты для WAL-listener 
+# Тесты для WAL-listener

@@ -1,17 +1,15 @@
-from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.generic import ListView, DetailView
-from rest_framework import viewsets, filters, status
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
+from django.views.generic import DetailView, ListView
 from django_filters import rest_framework as django_filters
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.utils import timezone
-from .models import City, Category, Partner, Offer
-from .serializers import (
-    CitySerializer, CategorySerializer,
-    PartnerSerializer, OfferSerializer
-)
-from django.db.models import Q
+
+from .models import Category, City, Offer, Partner
+from .serializers import CategorySerializer, CitySerializer, OfferSerializer, PartnerSerializer
 
 
 class CategoryListView(ListView):
@@ -19,6 +17,7 @@ class CategoryListView(ListView):
     Отображает список всех категорий акций.
     Использует пагинацию для оптимизации загрузки данных.
     """
+
     model = Category
     template_name = "promo/category_list.html"
     context_object_name = "categories"
@@ -30,6 +29,7 @@ class AllOffersListView(ListView):
     Представление для отображения всех акций с возможностью фильтрации по городу.
     Реализует пагинацию и фильтрацию на стороне сервера.
     """
+
     model = Offer
     template_name = "promo/offer_list.html"
     context_object_name = "offers"
@@ -56,6 +56,7 @@ class OfferListListView(ListView):
     Отображает список акций для конкретной категории.
     Поддерживает фильтрацию по городу и пагинацию.
     """
+
     model = Offer
     template_name = "promo/offer_list.html"
     context_object_name = "offers"
@@ -91,6 +92,7 @@ class OfferDetailView(DetailView):
     Детальное представление отдельной акции.
     Использует offer_id вместо pk для идентификации акции.
     """
+
     model = Offer
     template_name = "promo/offer_detail.html"
     context_object_name = "offer"
@@ -102,6 +104,7 @@ class SearchOffersListView(ListView):
     Реализует поиск акций по названию, описанию и имени партнера.
     Поддерживает фильтрацию по городу и пагинацию результатов.
     """
+
     model = Offer
     context_object_name = "offers"
     template_name = "promo/search_results.html"
@@ -117,9 +120,7 @@ class SearchOffersListView(ListView):
 
         if query:
             queryset = queryset.filter(
-                Q(title__icontains=query) |
-                Q(description__icontains=query) |
-                Q(partner__name__icontains=query)
+                Q(title__icontains=query) | Q(description__icontains=query) | Q(partner__name__icontains=query)
             )
 
         if city and city.isdigit():
@@ -145,6 +146,7 @@ class CityViewSet(viewsets.ModelViewSet):
     ViewSet для работы с городами через API.
     Поддерживает поиск по названию и получение акций для конкретного города.
     """
+
     queryset = City.objects.all()
     serializer_class = CitySerializer
     filter_backends = [filters.SearchFilter]
@@ -162,17 +164,16 @@ class CityViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         # Сохраняем данные перед удалением
         data = {
-            'id': instance.id,
-            'name': instance.name,
+            "id": instance.id,
+            "name": instance.name,
         }
         # Удаляем объект
         self.perform_destroy(instance)
         # Возвращаем данные об удаленном объекте
-        return Response({
-            'data': data,  # Добавляем данные в поле 'data'
-            'action': 'DELETE',
-            'table': 'promo_city'
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"data": data, "action": "DELETE", "table": "promo_city"},  # Добавляем данные в поле 'data'
+            status=status.HTTP_200_OK,
+        )
 
     @action(detail=True, methods=["get"])
     def offers(self, request, pk=None):
@@ -188,6 +189,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     ViewSet для работы с категориями через API.
     Поддерживает поиск по названию и получение акций по категории.
     """
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     filter_backends = [filters.SearchFilter]
@@ -207,6 +209,7 @@ class PartnerViewSet(viewsets.ModelViewSet):
     ViewSet для работы с партнерами через API.
     Поддерживает поиск по названию и описанию, получение активных акций.
     """
+
     queryset = Partner.objects.all()
     serializer_class = PartnerSerializer
     filter_backends = [filters.SearchFilter]
@@ -216,11 +219,7 @@ class PartnerViewSet(viewsets.ModelViewSet):
     def active_offers(self, request, pk=None):
         """Возвращает список активных акций для выбранного партнера."""
         partner = self.get_object()
-        offers = Offer.objects.filter(
-            partner=partner,
-            valid_from__lte=timezone.now(),
-            valid_to__gte=timezone.now()
-        )
+        offers = Offer.objects.filter(partner=partner, valid_from__lte=timezone.now(), valid_to__gte=timezone.now())
         serializer = OfferSerializer(offers, many=True)
         return Response(serializer.data)
 
@@ -231,22 +230,14 @@ class OfferFilter(django_filters.FilterSet):
     Поддерживает фильтрацию по городу, категории, партнеру,
     диапазону скидок и статусу активности.
     """
-    min_discount = django_filters.NumberFilter(
-        field_name="discount", lookup_expr="gte")
-    max_discount = django_filters.NumberFilter(
-        field_name="discount", lookup_expr="lte")
+
+    min_discount = django_filters.NumberFilter(field_name="discount", lookup_expr="gte")
+    max_discount = django_filters.NumberFilter(field_name="discount", lookup_expr="lte")
     active = django_filters.BooleanFilter(method="filter_active")
 
     class Meta:
         model = Offer
-        fields = [
-            "city",
-            "category",
-            "partner",
-            "min_discount",
-            "max_discount",
-            "active"
-        ]
+        fields = ["city", "category", "partner", "min_discount", "max_discount", "active"]
 
     def filter_active(self, queryset, name, value):
         """
@@ -254,10 +245,7 @@ class OfferFilter(django_filters.FilterSet):
         Активная акция должна иметь текущую дату в пределах срока действия.
         """
         if value:
-            return queryset.filter(
-                valid_from__lte=timezone.now(),
-                valid_to__gte=timezone.now()
-            )
+            return queryset.filter(valid_from__lte=timezone.now(), valid_to__gte=timezone.now())
         return queryset
 
 
@@ -266,13 +254,10 @@ class OfferViewSet(viewsets.ModelViewSet):
     ViewSet для работы с акциями через API.
     Поддерживает фильтрацию, поиск, сортировку и специальные действия.
     """
+
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
-    filter_backends = [
-        django_filters.DjangoFilterBackend,
-        filters.SearchFilter,
-        filters.OrderingFilter
-    ]
+    filter_backends = [django_filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = OfferFilter
     search_fields = ["title", "description", "promo_code"]
     ordering_fields = ["valid_from", "valid_to", "discount"]
@@ -281,10 +266,7 @@ class OfferViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def active(self, request):
         """Возвращает список всех активных акций."""
-        offers = Offer.objects.filter(
-            valid_from__lte=timezone.now(),
-            valid_to__gte=timezone.now()
-        )
+        offers = Offer.objects.filter(valid_from__lte=timezone.now(), valid_to__gte=timezone.now())
         serializer = self.get_serializer(offers, many=True)
         return Response(serializer.data)
 
@@ -292,8 +274,7 @@ class OfferViewSet(viewsets.ModelViewSet):
     def expiring_soon(self, request):
         """Возвращает список акций, срок действия которых истекает в течение недели."""
         offers = Offer.objects.filter(
-            valid_to__gte=timezone.now(),
-            valid_to__lte=timezone.now() + timezone.timedelta(days=7)
+            valid_to__gte=timezone.now(), valid_to__lte=timezone.now() + timezone.timedelta(days=7)
         )
         serializer = self.get_serializer(offers, many=True)
         return Response(serializer.data)

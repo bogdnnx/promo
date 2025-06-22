@@ -6,38 +6,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('promo', '0003_set_replica_identity'),
+        ("promo", "0003_set_replica_identity"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TelegramSubscription',
+            name="TelegramSubscription",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user_id', models.BigIntegerField(unique=True, verbose_name='ID пользователя Telegram')),
-                ('username', models.CharField(blank=True, max_length=100, null=True, verbose_name='Username')),
-                ('is_active', models.BooleanField(default=True, verbose_name='Активна')),
-                ('subscribed_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата подписки')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("user_id", models.BigIntegerField(unique=True, verbose_name="ID пользователя Telegram")),
+                ("username", models.CharField(blank=True, max_length=100, null=True, verbose_name="Username")),
+                ("is_active", models.BooleanField(default=True, verbose_name="Активна")),
+                ("subscribed_at", models.DateTimeField(auto_now_add=True, verbose_name="Дата подписки")),
             ],
             options={
-                'verbose_name': 'Подписка Telegram',
-                'verbose_name_plural': 'Подписки Telegram',
+                "verbose_name": "Подписка Telegram",
+                "verbose_name_plural": "Подписки Telegram",
             },
         ),
         migrations.AlterModelOptions(
-            name='category',
-            options={'ordering': ['id']},
+            name="category",
+            options={"ordering": ["id"]},
         ),
         migrations.AlterModelOptions(
-            name='city',
-            options={'ordering': ['id']},
+            name="city",
+            options={"ordering": ["id"]},
         ),
         migrations.AlterModelOptions(
-            name='offer',
-            options={'ordering': ['id']},
+            name="offer",
+            options={"ordering": ["id"]},
         ),
         migrations.AlterModelOptions(
-            name='partner',
-            options={'ordering': ['id']},
+            name="partner",
+            options={"ordering": ["id"]},
         ),
     ]

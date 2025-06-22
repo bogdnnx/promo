@@ -2,27 +2,9 @@
 
 Telegram-бот для уведомлений о событиях в системе с интеграцией Kafka и WAL-listener.
 
-## Быстрый запуск
 
-### Предварительные требования
 
-- Docker и Docker Compose
-- Git
-
-### 1. Клонирование и запуск
-
-```bash
-git clone <repository-url>
-cd ufanet_django
-
-# Запуск всех сервисов
-docker-compose up --build
-
-# Или в фоновом режиме
-docker-compose up -d
-```
-
-### 2. Доступ к сервисам
+### 1. Доступ к сервисам
 
 После запуска будут доступны:
 
